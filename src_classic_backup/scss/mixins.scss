@@ -1,0 +1,366 @@
+// css reset for all elements in the hierarchy where the mixin included
+@mixin reset {
+  // table, th, tr, td, tbody, thead, tfoot,
+  // section, aside, form, fieldset, footer, svg
+  // header, h1, h2, h3, h4, h5, h6,
+  ul, li, /* ol, dl, */ 
+  div, span, em, img, strong, a {
+    outline: none;
+    vertical-align: baseline;
+    @include i-text-align(left);
+    line-height: normal;
+    float: none;
+
+    // border: none;
+    // Remove from general reset?
+    // font-family: inherit;
+    // font-size: inherit;
+    // background: none;
+
+    margin: 0;
+    padding: 0;
+    //border: 0;
+    @include box-sizing(content-box);
+  }
+
+  // table {
+  //   @include reset-table;
+  // }
+
+  // td {
+  //   @include reset-table-cell;
+  // }
+
+  ol, ul/* , dl */ {
+    list-style: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  em {
+    font-style: normal;
+  }
+
+  img {
+    width: auto;
+    height: auto;
+  }
+}
+
+// Clearfix
+@mixin cf {
+
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+}
+
+.ls-clearfix {
+  @include cf;
+}
+
+@mixin size($width, $height) {
+  width: $width;
+  height: $height;
+}
+
+@mixin square_size($size) {
+  width: $size;
+  height: $size;
+}
+
+@mixin base_icon_action_buttons {
+
+  @include border-radius(50%);
+  text-align: center;
+}
+
+@mixin base_icon_active_engage {
+
+  @include border-radius(50%);
+  text-align: center;
+  @include transition(all 0.15s);
+}
+
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsis {
+  @include ellipsis;
+}
+
+/*
+---------------------------------
+    I18n Mixin
+---------------------------------
+*/
+
+/*
+  - all i18 mixins lead to "i18n-mirror"
+  - $imp: option for adding "!important" to the rull
+  - the value to path is: "!"
+*/
+
+@function mirror($direction) {
+  @if $direction == right {
+    @return left;
+  } @else {
+    @return right;
+  }
+}
+
+@mixin i-float($side) {
+  float: $side;
+
+  &.ls-rtl {
+    float: mirror($side);
+  }
+}
+
+@mixin i-text-align($side) {
+  text-align: $side;
+
+  &.ls-rtl {
+    text-align: mirror($side);
+  }
+}
+
+@mixin i-margin($top, $right, $bottom, $left) {
+  margin: $top $right $bottom $left;
+
+  &.ls-rtl {
+    margin: $top $left $bottom $right;
+  }
+}
+
+@mixin i-margin-mirror($left, $right) {
+  margin-left: $left;
+  margin-right: $right;
+
+  &.ls-rtl {
+    margin-left: $right;
+    margin-right: $left;
+  }
+}
+
+@mixin i-padding($top, $right, $bottom, $left) {
+  padding: #{$top} #{$right} #{$bottom} #{$left};
+
+  &.ls-rtl {
+    padding: #{$top} #{$left} #{$bottom} #{$right};
+  }
+}
+
+@mixin i-padding-mirror($left, $right) {
+  padding-left: #{$left};
+  padding-right: #{$right};
+
+  &.ls-rtl {
+    padding-left: #{$right};
+    padding-right: #{$left};
+  }
+}
+
+@mixin i-right($right) {
+  @include i-position-mirror(auto, $right);
+}
+
+@mixin i-left($left) {
+  @include i-position-mirror($left, auto);
+}
+
+@mixin i-position-mirror($left, $right) {
+  left: #{$left};
+  right: #{$right};
+
+  &.ls-rtl {
+    left: #{$right};
+    right: #{$left};
+  }
+}
+
+/*
+---------------------------------
+   Fonts Mixins
+---------------------------------
+*/
+
+@mixin font-size($fontSizeInPx, $baseSizeInPx: 12) {
+  // convert font-size from pixels to em (default relative px size - 12)
+  // example - 18px font size in em relative to 12px base size is 18px/12px = 1.5em
+
+  $fontSizeInEm: ($fontSizeInPx / $baseSizeInPx);
+  font-size: $fontSizeInEm + em;
+}
+
+@mixin text-size-adjust($value: none) {
+  -webkit-text-size-adjust: $value;
+  -moz-text-size-adjust: $value;
+  -ms-text-size-adjust: $value;
+  text-size-adjust: $value;
+}
+
+/*
+---------------------------------
+   Browser Compatibility Mixin
+---------------------------------
+*/
+
+@mixin animation($animation: null) {
+  -webkit-animation: $animation;
+  -moz-animation: $animation;
+  -o-animation: $animation;
+  animation: $animation;
+}
+
+@mixin animation-delay($delay: 0) {
+  -webkit-animation-delay: $delay;
+  -moz-animation-delay: $delay;
+  -o-animation-delay: $delay;
+  animation-delay: $delay;
+}
+
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+  @-moz-keyframes #{$name} {
+    @content;
+  }
+  @-ms-keyframes #{$name} {
+    @content;
+  }
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+/*
+---------------------------------
+   Layout Mixins
+---------------------------------
+*/
+
+@mixin flex-box {
+
+  .layout-column {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+
+  .layout-row,
+  .layout-column {
+    box-sizing: border-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+
+  .flex {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    box-sizing: border-box;
+  }
+
+  .flex-center {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    box-sizing: border-box;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+  }
+
+  .flex-end {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    box-sizing: border-box;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -webkit-align-items: flex-end;
+    -ms-align-items: flex-end;
+    align-items: flex-end;
+  }
+  
+  .flex-start-center {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    box-sizing: border-box;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-align-items: center;
+    -ms-align-items: center;
+    align-items: center;
+  }
+  
+  .flex-start-end {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    box-sizing: border-box;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-align-items: flex-end;
+    -ms-align-items: flex-end;
+    align-items: flex-end;
+  }
+
+  @media screen and (min-width: 600px) {
+
+    .layout-row-gt-xs {
+      box-sizing: border-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+    }
+
+    .flex-gt-xs {
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      box-sizing: border-box;
+    }
+  } 
+}
+
+

@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../vcita"
+		},
+		{
+			"path": "../vitrage"
+		}
+	],
+	"settings": {}
+}

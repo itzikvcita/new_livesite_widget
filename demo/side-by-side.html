@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Side-by-Side Widget Comparison</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    
+    .comparison-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+    
+    .widget-panel {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      min-height: 800px;
+    }
+    
+    .widget-panel h2 {
+      margin-bottom: 15px;
+      color: #1747ac;
+      border-bottom: 2px solid #1747ac;
+      padding-bottom: 10px;
+    }
+    
+    .widget-panel.production h2 {
+      color: #639d2c;
+      border-bottom-color: #639d2c;
+    }
+    
+    .widget-frame {
+      width: 100%;
+      height: 700px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      background: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .status {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .status.loading {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    .info {
+      margin-top: 15px;
+      padding: 10px;
+      background: #e9ecef;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    
+    .info code {
+      background: #f8f9fa;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .debug-info {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: monospace;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>LiveSite Widget Comparison: Production vs Local</h1>
+  
+  <div class="comparison-container">
+    <!-- Production Widget Panel -->
+    <div class="widget-panel production">
+      <h2>Production Widget (CDN)</h2>
+      <iframe class="widget-frame" id="production-iframe" sandbox="allow-same-origin allow-scripts allow-forms allow-popups"></iframe>
+      <div class="status loading" id="production-status">Loading production widget...</div>
+      <div class="info">
+        <strong>Source:</strong> <code>d2ra6nuwn69ktl.cloudfront.net/assets/livesite.js</code><br>
+        <strong>CSS:</strong> <code>d2ra6nuwn69ktl.cloudfront.net/assets/livesite.css</code><br>
+        <strong>Business ID:</strong> <code>WI-2HUTRFBQZWZWH7EF835C</code>
+      </div>
+      <div class="debug-info" id="production-debug"></div>
+    </div>
+    
+    <!-- Local Widget Panel -->
+    <div class="widget-panel local">
+      <h2>Local Widget (Development)</h2>
+      <iframe class="widget-frame" id="local-iframe" sandbox="allow-same-origin allow-scripts allow-forms allow-popups"></iframe>
+      <div class="status loading" id="local-status">Loading local widget...</div>
+      <div class="info">
+        <strong>Source:</strong> <code>localhost:5000/dist/livesite.min.js</code><br>
+        <strong>CSS:</strong> <code>localhost:5000/dist/livesite.min.css</code><br>
+        <strong>Business ID:</strong> <code>WI-2HUTRFBQZWZWH7EF835C</code>
+      </div>
+      <div class="debug-info" id="local-debug"></div>
+    </div>
+  </div>
+  
+  <script>
+    const businessId = 'WI-2HUTRFBQZWZWH7EF835C';
+    
+    function updateDebug(panel, info) {
+      const debugEl = document.getElementById(panel + '-debug');
+      debugEl.textContent = JSON.stringify(info, null, 2);
+    }
+    
+    // Production Widget Setup
+    function loadProductionWidget() {
+      const iframe = document.getElementById('production-iframe');
+      const status = document.getElementById('production-status');
+      
+      const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>Production Widget</title>
+          <style>
+            body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f0f0f0; }
+            .info { background: #e9ecef; padding: 10px; margin-bottom: 20px; border-radius: 4px; }
+          </style>
+        </head>
+        <body>
+          <div class="info">
+            <strong>Production Widget</strong><br>
+            Loading from CDN: d2ra6nuwn69ktl.cloudfront.net
+          </div>
+          <div id="widget-container"></div>
+          
+          <script type='text/javascript' charset='utf-8'>
+            window.liveSiteAsyncInit = function(liveSite) {
+              console.log('Production widget initializing with liveSite object:', typeof liveSite);
+              if (liveSite && liveSite.init) {
+                liveSite.init({
+                  id: '${businessId}'
+                });
+                console.log('Production widget initialized');
+                
+                // Debug info
+                setTimeout(() => {
+                  const widget = document.querySelector('#livesite_active_engage');
+                  const closeBtn = widget ? widget.querySelector('.ls-close') : null;
+                  const moreActions = widget ? widget.querySelector('.ls-content .ls-more-actions') : null;
+                  const debug = {
+                    widgetExists: !!widget,
+                    closeBtn: {
+                      exists: !!closeBtn,
+                      html: closeBtn ? closeBtn.outerHTML : null,
+                      classes: closeBtn ? Array.from(closeBtn.classList) : [],
+                      beforeContent: closeBtn ? window.getComputedStyle(closeBtn, ':before').content : null
+                    },
+                    moreActions: {
+                      exists: !!moreActions,
+                      html: moreActions ? moreActions.outerHTML : null,
+                      classes: moreActions ? Array.from(moreActions.classList) : [],
+                      beforeContent: moreActions ? window.getComputedStyle(moreActions, ':before').content : null
+                    }
+                  };
+                  if (window.parent) {
+                    window.parent.postMessage({ type: 'production-widget-debug', data: debug }, '*');
+                  }
+                }, 3000);
+                
+                if (window.parent) {
+                  window.parent.postMessage({ type: 'production-widget-ready', success: true }, '*');
+                }
+              } else {
+                console.error('Production LiveSite not available');
+                if (window.parent) {
+                  window.parent.postMessage({ type: 'production-widget-ready', success: false, error: 'LiveSite not available' }, '*');
+                }
+              }
+            };
+            
+            (function(d, s, id){ 
+              var js, fjs = d.getElementsByTagName(s)[0],
+                  p = 'https://',
+                  r = Math.floor(new Date().getTime() / 1000000);
+              if (d.getElementById(id)) {return;}
+              js = d.createElement(s); js.id = id;
+              js.src = p + "d2ra6nuwn69ktl.cloudfront.net/assets/livesite.js?" + r;
+              js.onload = function() {
+                console.log('Production widget script loaded');
+              };
+              js.onerror = function() {
+                console.error('Failed to load production widget script');
+                if (window.parent) {
+                  window.parent.postMessage({ type: 'production-widget-ready', success: false, error: 'Script load failed' }, '*');
+                }
+              };
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'livesite-jssdk'));
+          <\/script>
+        </body>
+        </html>
+      `;
+      
+      iframe.srcdoc = html;
+      
+      window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'production-widget-ready') {
+          if (event.data.success) {
+            status.textContent = 'Production widget loaded successfully';
+            status.className = 'status success';
+          } else {
+            status.textContent = 'Production widget failed: ' + (event.data.error || 'Unknown error');
+            status.className = 'status error';
+          }
+        } else if (event.data && event.data.type === 'production-widget-debug') {
+          updateDebug('production', event.data.data);
+        }
+      });
+    }
+    
+    // Local Widget Setup
+    function loadLocalWidget() {
+      const iframe = document.getElementById('local-iframe');
+      const status = document.getElementById('local-status');
+      
+      const currentUrl = new URL(window.location.href);
+      const basePath = currentUrl.pathname.substring(0, currentUrl.pathname.lastIndexOf('/'));
+      const baseUrl = currentUrl.origin + basePath;
+      
+      const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>Local Widget</title>
+          <style>
+            body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f0f0f0; }
+            .info { background: #e9ecef; padding: 10px; margin-bottom: 20px; border-radius: 4px; }
+          </style>
+          <!-- CSS will be loaded automatically by widget's loader.js based on device type -->
+        </head>
+        <body>
+          <div class="info">
+            <strong>Local Widget</strong><br>
+            Loading from: ${baseUrl}/../dist/livesite.min.js
+          </div>
+          <div id="widget-container"></div>
+          
+          <script type='text/javascript' charset='utf-8'>
+            window.liveSiteAsyncInit = function() {
+              console.log('Local widget initializing, window.LiveSite:', typeof window.LiveSite);
+              if (window.LiveSite && window.LiveSite.init) {
+                window.LiveSite.init({
+                  id: '${businessId}',
+                  host: 'www.vcita.com',
+                  portalHost: 'clients.vcita.com',
+                  desktopCss: '${baseUrl}/../dist/livesite.min.css',
+                  mobileCss: '${baseUrl}/../dist/livesite.mobile.min.css',
+                  log: true
+                });
+                console.log('Local widget initialized');
+                
+                // Debug info
+                setTimeout(() => {
+                  const widget = document.querySelector('#livesite_active_engage');
+                  const closeBtn = widget ? widget.querySelector('.ls-close') : null;
+                  const moreActions = widget ? widget.querySelector('.ls-content .ls-more-actions') : null;
+                  const debug = {
+                    widgetExists: !!widget,
+                    closeBtn: {
+                      exists: !!closeBtn,
+                      html: closeBtn ? closeBtn.outerHTML : null,
+                      classes: closeBtn ? Array.from(closeBtn.classList) : [],
+                      beforeContent: closeBtn ? window.getComputedStyle(closeBtn, ':before').content : null,
+                      beforeFontFamily: closeBtn ? window.getComputedStyle(closeBtn, ':before').fontFamily : null
+                    },
+                    moreActions: {
+                      exists: !!moreActions,
+                      html: moreActions ? moreActions.outerHTML : null,
+                      classes: moreActions ? Array.from(moreActions.classList) : [],
+                      beforeContent: moreActions ? window.getComputedStyle(moreActions, ':before').content : null,
+                      beforeFontFamily: moreActions ? window.getComputedStyle(moreActions, ':before').fontFamily : null
+                    }
+                  };
+                  if (window.parent) {
+                    window.parent.postMessage({ type: 'local-widget-debug', data: debug }, '*');
+                  }
+                }, 3000);
+                
+                if (window.parent) {
+                  window.parent.postMessage({ type: 'local-widget-ready', success: true }, '*');
+                }
+              } else {
+                console.error('Local LiveSite not available');
+                if (window.parent) {
+                  window.parent.postMessage({ type: 'local-widget-ready', success: false, error: 'LiveSite not available' }, '*');
+                }
+              }
+            };
+            
+            (function() {
+              var script = document.createElement('script');
+              script.src = '${baseUrl}/../dist/livesite.min.js';
+              script.onload = function() {
+                console.log('Local widget script loaded');
+              };
+              script.onerror = function() {
+                console.error('Failed to load local widget script');
+                if (window.parent) {
+                  window.parent.postMessage({ type: 'local-widget-ready', success: false, error: 'Script load failed' }, '*');
+                }
+              };
+              document.head.appendChild(script);
+            })();
+          <\/script>
+        </body>
+        </html>
+      `;
+      
+      iframe.srcdoc = html;
+      
+      window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'local-widget-ready') {
+          if (event.data.success) {
+            status.textContent = 'Local widget loaded successfully';
+            status.className = 'status success';
+          } else {
+            status.textContent = 'Local widget failed: ' + (event.data.error || 'Unknown error');
+            status.className = 'status error';
+          }
+        } else if (event.data && event.data.type === 'local-widget-debug') {
+          updateDebug('local', event.data.data);
+        }
+      });
+    }
+    
+    // Load both widgets
+    window.addEventListener('load', function() {
+      loadProductionWidget();
+      loadLocalWidget();
+    });
+  </script>
+</body>
+</html>

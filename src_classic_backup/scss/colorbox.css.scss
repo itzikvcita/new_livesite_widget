@@ -1,0 +1,194 @@
+
+@include keyframes(rotate) {
+  100% { @include transform(rotate(360deg)); }
+}
+
+@include keyframes(bounce) {
+  0%, 100% { @include transform( scale(0) ); }
+  50% { @include transform( scale(1) ); }
+}
+
+/*
+    Colorbox Core Style:
+    The following CSS is consistent between example themes and should not be altered.
+*/
+#ls_colorbox, #cls_boxOverlay, #ls_cboxWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2147483642;
+  max-width: 100%;
+}
+
+#ls_cboxWrapper {
+  max-width: 100%;
+  min-height: 100%;
+}
+
+#ls_cboxOverlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  z-index: 2147483642;
+}
+
+#ls_cboxMiddleLeft, #ls_cboxBottomLeft {
+  clear: left;
+}
+
+#ls_cboxContent {
+  position: relative;
+  max-width: 100%;
+}
+
+#ls_cboxLoadedContent {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+#ls_cboxLoadingOverlay, #ls_cboxLoadingGraphic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ls_cboxIframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+#ls_colorbox, #ls_cboxWrapper, #ls_cboxContent, #ls_cboxLoadedContent {
+  height: 100%!important;
+  max-height: 700px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+}
+
+#ls_cboxContentWrapper {
+  height: 100%;
+}
+
+/*
+    User Style:
+    Change the following styles to modify the appearance of Colorbox.  They are
+    ordered & tabbed in a way that represents the nesting of the generated HTML.
+*/
+#ls_cboxOverlay {
+  background: #000;
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+}
+
+#ls_colorbox {
+  outline: 0;
+  position: absolute !important;
+
+  &.i18n-rtl {
+    #ls_cboxWrapper {
+      div {
+        #ls_cboxContent {
+          #ls_cboxClose {
+            left: 6px;
+          }
+        }
+      }
+    }
+  }
+}
+
+#ls_cboxContent{
+  overflow:hidden;
+  background:#FFF;
+  @include border-radius(2px);
+  @include box-shadow(0 0 21px 8px rgba(0, 0, 0, 0.25));
+}
+
+.ls_cboxIframe {
+  background: #fff;
+}
+
+#ls_cboxError {
+  padding: 50px;
+  border: 1px solid #ccc;
+}
+
+#ls_cboxLoadedContent {
+  background: #FFF;
+}
+
+#ls_cboxLoadingGraphic {
+  left: 50%;
+  margin-left: -20px;
+  top: 50%;
+  margin-top: -20px;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+
+  @include animation(rotate 2.0s infinite linear);
+
+  &:before,
+  &:after {
+    content: '';
+    display: inline-block;
+    width: 60%;
+    height: 60%;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    background-color: $lightbox_loader_color;
+    border-radius: 100%;
+    @include animation(bounce 2.0s infinite ease-in-out);
+  }
+}
+
+#ls_cboxLoadingOverlay {
+  background: #FFF;
+}
+
+#ls_cboxCurrent {
+  position: absolute;
+  top: -22px;
+  right: 205px;
+  text-indent: -9999px;
+}
+
+/* these elements are buttons, and may need to have additional styles reset to avoid unwanted base styles */
+#ls_cboxClose {
+  position: absolute;
+  top: 6px;
+  right: 3px;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-size: 0;
+  background-color: transparent;
+  overflow: visible;
+  outline: none;
+  cursor: pointer;
+
+  @include icon-cancel;
+
+  &:before {
+    line-height: 15px;
+    font-size: 12px;
+    color: #dbcece;
+    transform: scale(1.5);
+    @include transition(color 0.25s);
+  }
+
+  &:hover:before {
+    color: #605956;
+  }
+}

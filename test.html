@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiveSite Widget Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>LiveSite Widget Test Page</h1>
+  
+  <div class="test-section">
+    <h2>Widget Status</h2>
+    <p id="widget-status">Loading...</p>
+  </div>
+
+  <div class="test-section">
+    <h2>Actions</h2>
+    <button onclick="testSchedule()">Schedule</button>
+    <button onclick="testContact()">Contact</button>
+    <button onclick="testPay()">Pay</button>
+    <button onclick="testDocument()">Document</button>
+    <button onclick="testLogin()">Login</button>
+    <button onclick="testMyAccount()">My Account</button>
+  </div>
+
+  <div class="test-section">
+    <h2>UI Controls</h2>
+    <button onclick="showEngage()">Show ActiveEngage</button>
+    <button onclick="hideEngage()">Hide ActiveEngage</button>
+    <button onclick="toggleEngage()">Toggle ActiveEngage</button>
+    <button onclick="resetState()">Reset State</button>
+  </div>
+
+  <div class="test-section">
+    <h2>Configuration</h2>
+    <label>
+      UID: <input type="text" id="test-uid" placeholder="test-uid" value="test-123">
+    </label>
+    <button onclick="updateConfig()">Update Config</button>
+  </div>
+
+  <script src="dist/livesite.js"></script>
+  <script>
+    // Check if widget loaded
+    if (window.LiveSite) {
+      document.getElementById('widget-status').textContent = 'Widget loaded successfully!';
+      document.getElementById('widget-status').style.color = 'green';
+      
+      // Initialize with test config
+      LiveSite.init({
+        uid: 'test-123',
+        host: 'www.vcita.com',
+        portalHost: 'clients.vcita.com',
+        desktopCss: 'dist/livesite.cdn.css',
+        mobileCss: 'dist/livesite.mobile.cdn.css',
+        log: true,
+        activeEngage: true,
+        engageButton: true,
+        desktopEnabled: true,
+        mobileEnabled: true,
+      });
+
+      // Listen for ready event
+      if (LiveSite.on) {
+        LiveSite.on('ready', function() {
+          console.log('Widget is ready!');
+          document.getElementById('widget-status').textContent = 'Widget loaded and ready!';
+        });
+      }
+    } else {
+      document.getElementById('widget-status').textContent = 'ERROR: Widget failed to load!';
+      document.getElementById('widget-status').style.color = 'red';
+    }
+
+    function testSchedule() {
+      if (window.LiveSite && LiveSite.schedule) {
+        LiveSite.schedule({ uid: document.getElementById('test-uid').value });
+      }
+    }
+
+    function testContact() {
+      if (window.LiveSite && LiveSite.contact) {
+        LiveSite.contact({ uid: document.getElementById('test-uid').value });
+      }
+    }
+
+    function testPay() {
+      if (window.LiveSite && LiveSite.pay) {
+        LiveSite.pay({ uid: document.getElementById('test-uid').value });
+      }
+    }
+
+    function testDocument() {
+      if (window.LiveSite && LiveSite.document) {
+        LiveSite.document({ uid: document.getElementById('test-uid').value });
+      }
+    }
+
+    function testLogin() {
+      if (window.LiveSite && LiveSite.login) {
+        LiveSite.login({ uid: document.getElementById('test-uid').value });
+      }
+    }
+
+    function testMyAccount() {
+      if (window.LiveSite && LiveSite.myaccount) {
+        LiveSite.myaccount({ uid: document.getElementById('test-uid').value });
+      }
+    }
+
+    function showEngage() {
+      if (window.LiveSite && LiveSite.ui && LiveSite.ui.showActiveEngage) {
+        LiveSite.ui.showActiveEngage();
+      }
+    }
+
+    function hideEngage() {
+      if (window.LiveSite && LiveSite.ui && LiveSite.ui.hideActiveEngage) {
+        LiveSite.ui.hideActiveEngage();
+      }
+    }
+
+    function toggleEngage() {
+      if (window.LiveSite && LiveSite.ui && LiveSite.ui.toggleActiveEngage) {
+        LiveSite.ui.toggleActiveEngage();
+      }
+    }
+
+    function resetState() {
+      if (window.LiveSite && LiveSite.utils && LiveSite.utils.resetState) {
+        LiveSite.utils.resetState();
+      }
+    }
+
+    function updateConfig() {
+      if (window.LiveSite && LiveSite.init) {
+        const uid = document.getElementById('test-uid').value;
+        LiveSite.init({
+          uid: uid,
+          host: 'www.vcita.com',
+          portalHost: 'clients.vcita.com',
+          desktopCss: 'dist/livesite.cdn.css',
+          mobileCss: 'dist/livesite.mobile.cdn.css',
+          log: true,
+        });
+        alert('Config updated with UID: ' + uid);
+      }
+    }
+  </script>
+</body>
+</html>

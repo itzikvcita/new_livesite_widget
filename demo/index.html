@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiveSite Widget Demo</title>
+  <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+  <div class="demo-container">
+    <!-- Left Side: Settings Panel -->
+    <div class="settings-panel">
+      <header class="demo-header">
+        <h1>LiveSite Widget Demo</h1>
+        <p>Test the widget on any website</p>
+      </header>
+
+      <div class="demo-controls">
+        <div class="control-group">
+          <label for="website-url">Website URL:</label>
+          <div class="url-input-group">
+            <input type="text" id="website-url" placeholder="https://example.com" value="https://example.com">
+            <button id="load-website" class="btn btn-primary">Load</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="config-preset">Configuration Preset:</label>
+          <select id="config-preset" class="config-select">
+            <option value="development">Development</option>
+            <option value="production">Production</option>
+            <option value="custom">Custom</option>
+          </select>
+          <button id="edit-config" class="btn btn-secondary">Edit Config</button>
+        </div>
+
+      </div>
+
+      <div class="demo-footer">
+        <div class="widget-controls">
+          <button id="toggle-widget" class="btn btn-control">Toggle Widget</button>
+          <button id="reset-widget" class="btn btn-control">Reset</button>
+          <button id="reload-widget" class="btn btn-control">Reload Widget</button>
+          <button id="show-console" class="btn btn-control">Console</button>
+        </div>
+        <div class="status-indicator" id="status-indicator">
+          <span class="status-text" id="status-text">Ready</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: Demo Area -->
+    <div class="demo-main">
+      <div class="iframe-container" id="iframe-container">
+        <div class="iframe-placeholder" id="iframe-placeholder">
+          <div style="text-align: center;">
+            <p>Enter a website URL and click "Load" to test the widget</p>
+            <p style="font-size: 12px; color: #999; margin-top: 10px;">
+              The widget will be loaded in a container page with the website in a nested iframe.<br>
+              Some websites may block iframe embedding (X-Frame-Options).
+            </p>
+          </div>
+        </div>
+        <iframe id="target-iframe" style="display: none; width: 100%; height: 100%; border: none;" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation allow-navigation"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Config Modal -->
+  <div id="config-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Widget Configuration</h2>
+        <button class="modal-close" id="close-config">&times;</button>
+      </div>
+      <div class="modal-body" id="config-form">
+        <!-- Config form will be populated by JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <button id="save-config" class="btn btn-primary">Save</button>
+        <button id="reset-config" class="btn btn-secondary">Reset</button>
+        <button id="cancel-config" class="btn btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Console Modal -->
+  <div id="console-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Console Log</h2>
+        <button class="modal-close" id="close-console">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="console-output" class="console-output"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="clear-console" class="btn btn-secondary">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Widget script is NOT loaded here - it should only load in widget-container.html -->
+  <!-- <script src="../dist/livesite.js"></script> -->
+  <script src="demo.js"></script>
+  <script type='text/javascript' charset='utf-8'>
+    // NOTE: Widget should NOT be initialized on the demo page itself
+    // It should only be initialized inside the widget-container.html iframe
+    // The widget-container.html will load the widget script and initialize it there
+    
+    // Remove any auto-initialization on the demo page
+    window.liveSiteAsyncInit = function() {
+      // Do nothing - widget should only initialize in the iframe
+      console.log('Widget initialization skipped on demo page - widget will initialize in iframe');
+    };
+  </script>
+</body>
+</html>

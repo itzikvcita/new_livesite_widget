@@ -1,0 +1,418 @@
+/*
+  vcita LiveSite css skeleton - http://www.vcita.com/assets/livesite_skeleton.css
+*/
+
+/*
+--------------------------------------------------------------
+    ACTION BUTTONS (side menu)
+--------------------------------------------------------------
+*/
+
+#livesite_action_buttons {
+  /*  */
+
+  .ls-welcome-box-C {
+    /*  */
+  }
+
+  .ls-action {
+    /*  */
+
+    &:first-of-type:hover + .ls-welcome-box-C {
+      /*  */
+    }
+
+    &.ls-start-animate {
+      /*  */
+    }
+
+    .ls-counter {
+      /*  */
+    }
+
+    > span {
+      /*  */
+
+      em {
+        /*  */
+      }
+    }
+
+    &:hover {
+      /*  */
+
+      span {
+        /*  */
+      }
+    }
+
+    &:before {
+      /*  */
+    }
+
+    &.ls-icon-user {
+      /*  */
+
+      &:before {
+        /*  */
+      }
+    }
+
+    &.ls-icon-doc {
+      /*  */
+
+      &:before {
+        /*  */
+      }
+    }
+
+    &.ls-icon-cal,
+    &.ls-icon-doc {
+      /*  */
+
+      &:before {
+        /*  */
+      }
+    }
+
+    &.ls-icon-env,
+    &.ls-icon-phone {
+      /*  */
+
+      &:before {
+        /*  */
+      }
+    }
+
+    &.ls-icon-credit-card {
+      /*  */
+
+      &:before {
+        /*  */
+      }
+    }
+  }
+
+  .livesite-client-welcome-box .ls-welcome-box-C {
+    /*  */
+  }
+}
+
+/*
+--------------------------------------------------------------
+    ACTIVE ENGAGE + ENGAGE BUTTON
+--------------------------------------------------------------
+*/
+
+#livesite_engage_button {
+  /*  */
+
+  .ls-engage-button {
+    /*  */
+  }
+
+  .ls-welcome-box {
+    /*  */
+  }
+}
+
+#livesite_active_engage {
+  /*  */
+
+  .ls-content {
+    /*  */
+
+    .ls-text a:hover {
+      /*  */
+    }
+
+    .ls-more-actions-C {
+      /*  */
+
+      .ls-more-actions {
+        /*  */
+
+        &:before {
+          /*  */
+        }
+
+        &:hover {
+          /*  */
+
+          &:before {
+            /*  */
+          }
+        }
+      }
+
+      .ls-tooltip-menu {
+        /*  */
+
+        &:before {
+          /*  */
+        }
+      }
+
+      + .ls-main-action {
+        /*  */
+
+        &:before {
+          /*  */
+        }
+      }
+    }
+  }
+
+  .ls-ae-top {
+    /*  */
+  }
+
+  .ls-powered-by {
+    /*  */
+
+    &:hover {
+      /*  */
+    }
+  }
+
+  a.ls-powered-by,
+  .ls-powered-by a {
+      /*  */
+  }
+
+  .ls-promotional-link {
+    /*  */
+
+    &:hover {
+      /*  */
+    }
+  }
+
+  .ls-close {
+    /*  */
+
+    &:hover {
+      /*  */
+    }
+
+    &:before {
+      /*  */
+    }
+  }
+
+  .ls-title {
+    /*  */
+  }
+
+  .ls-text {
+    /*  */
+
+    em {
+      /*  */
+    }
+  }
+
+  .ls-photo {
+    /*  */
+
+    img {
+      /*  */
+    }
+
+    + .ls-title {
+      /*  */
+    }
+  }
+
+  .ls-main-action {
+    /*  */
+
+    [dir='rtl'] & {
+      /*  */
+    }
+
+    &:before {
+      /*  */
+    }
+
+    &:hover {
+      /*  */
+    }
+  }
+
+  .ls-main-action-C + .ls-powered-by {
+    /*  */
+  }
+
+  .ls-inline-actions {
+    /*  */
+
+    .ls-action {
+      /*  */
+
+      &:hover:before,
+      &:hover:after {
+      /*  */
+      }
+
+      &:active:before,
+      &:active:after {
+        /*  */
+      }
+    }
+  }
+
+  .ls-actions-C {
+    /*  */
+
+    .ls-action,
+    .ls-more-actions {
+      /*  */
+    }
+
+    .ls-more-actions-C {
+      /*  */
+    }
+
+    .ls-tooltip-menu:before {
+      /*  */
+    }
+  }
+
+  .ls-action {
+    /*  */
+
+    &:before {
+      /*  */
+    }
+
+    &.ls-my-account {
+      /*  */
+
+      span {
+        /*  */
+      }
+
+      &:before {
+        /*  */
+      }
+
+      .ls-counter {
+        /*  */
+      }
+    }
+
+    &.ls-more-actions {
+      /*  */
+
+      &:before{
+        /*  */
+      }
+    }
+
+    &.ls-icon-cal:before {
+      /*  */
+    }
+
+    &.ls-icon-env:before {
+      /*  */
+    }
+
+    &.ls-icon-phone:before {
+      /*  */
+    }
+
+    &.ls-icon-credit-card:before {
+      /*  */
+    }
+
+    &.ls-icon-doc:before {
+      /*  */
+    }
+  }
+
+  .ls-profile-action {
+    /*  */
+
+    .ls-my-account {
+      /*  */
+    }
+  }
+
+  .ls-more-actions-C {
+    /*  */
+
+    &:hover {
+      /*  */
+
+      .ls-tooltip-menu {
+        /*  */
+      }
+    }
+  }
+
+  .ls-tooltip-menu {
+    /*  */
+
+    &:before {
+      /*  */
+    }
+  }
+
+  .ls-tooltip-menu-item {
+    /*  */
+
+    &:before {
+      /*  */
+    }
+
+    &.ls-icon-credit-card:before {
+      /*  */
+    }
+
+    &.ls-icon-doc:before,
+    &.ls-icon-env:before {
+      /*  */
+    }
+
+    &:after {
+      /*  */
+    }
+
+    &:hover {
+      /*  */
+    }
+  }
+}
+
+/*
+--------------------------------------------------------------
+    CLIENT WELCOME BOX
+--------------------------------------------------------------
+*/
+
+#livesite_engage_button .ls-welcome-box,
+#livesite_action_buttons .ls-welcome-box, {
+  /*  */
+  .ls-close {
+    /*  */
+
+    &:hover {
+      /*  */
+    }
+
+    &:before {
+     /*  */
+    }
+  }
+
+  .ls-title {
+    /*  */
+  }
+
+  .ls-content {
+    /*  */
+  }
+}
+
+

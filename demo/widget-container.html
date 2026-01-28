@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Widget Container</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    .website-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+    
+    /* Ensure close button is visible - matches original behavior where font loads from CDN */
+    /* This ensures the button has dimensions even if icon font hasn't loaded yet */
+    #livesite_active_engage .ls-close {
+      width: 15px;
+      height: 15px;
+      min-width: 15px;
+      min-height: 15px;
+      display: block;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Full-screen iframe for the external website -->
+  <iframe id="website-iframe" class="website-iframe" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"></iframe>
+  
+  <!-- Widget will be initialized here and will overlay on top -->
+  
+  <script>
+    // Initialize widget using the same pattern as production (liveSiteAsyncInit)
+    window.liveSiteAsyncInit = function() {
+      // Get configuration - widget will fetch from server using business ID
+      const config = getConfig();
+      
+      console.log('Initializing LiveSite widget with config:', config);
+      
+      // Initialize the widget - same as production: LiveSite.init({ id: 'WI-...' })
+      if (window.LiveSite && window.LiveSite.init) {
+        window.LiveSite.init(config);
+        console.log('LiveSite widget initialized');
+        
+        // Listen for widget ready event
+        if (window.LiveSite.on) {
+          window.LiveSite.on('ready', () => {
+            console.log('LiveSite widget is ready and rendered');
+            // Notify parent
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ 
+                  type: 'livesite-widget-initialized', 
+                  success: true 
+                }, '*');
+              }
+            } catch (e) {
+              // Cross-origin
+            }
+          });
+        }
+      }
+    };
+    
+    // Load widget script
+    (function() {
+      const script = document.createElement('script');
+      const currentUrl = new URL(window.location.href);
+      // Use .min.js (production build) with cache busting
+      script.src = currentUrl.origin + '/dist/livesite.min.js?v=' + Date.now();
+      script.onerror = function() {
+        console.error('Failed to load widget script from:', script.src);
+      };
+      document.head.appendChild(script);
+    })();
+  </script>
+  <script>
+    // Get configuration - widget will fetch from server using business ID/UID
+    function getConfig() {
+      const urlParams = new URLSearchParams(window.location.search);
+      
+      // Get business ID/UID from URL parameters (can be 'id', 'uid', or 'businessId')
+      const businessId = urlParams.get('id') || urlParams.get('uid') || urlParams.get('businessId');
+      
+      // Get host configuration (defaults to vcita.com - these are the widget API servers, not the website URL)
+      const host = urlParams.get('host') || 'www.vcita.com';
+      const portalHost = urlParams.get('portalHost') || 'clients.vcita.com';
+      
+      // Minimal config - widget will fetch the rest from server using the ID
+      const config = {
+        host: host,
+        portalHost: portalHost,
+        log: urlParams.get('log') === 'true' || false, // Enable logging for debugging
+      };
+      
+      // If business ID is provided, set it as 'id' so widget fetches config from server
+      // Production format: id: 'WI-2HUTRFBQZWZWH7EF835C'
+      if (businessId) {
+        config.id = businessId;
+        console.log('Using business ID to fetch config from server:', businessId);
+      } else {
+        // Fallback: try to get from parent window (for demo purposes)
+        try {
+          if (window.parent && window.parent.demoConfig) {
+            const parentConfig = window.parent.demoConfig;
+            if (parentConfig.uid) {
+              config.id = parentConfig.uid;
+              console.log('Using UID from parent config:', parentConfig.uid);
+            } else {
+              // Merge parent config but still try to fetch if it has uid
+              Object.assign(config, parentConfig);
+            }
+          }
+        } catch (e) {
+          // Cross-origin, can't access parent
+        }
+        
+        // If still no ID, check if config was passed directly
+        const configParam = urlParams.get('config');
+        if (configParam) {
+          try {
+            const parsedConfig = JSON.parse(decodeURIComponent(configParam));
+            if (parsedConfig.uid) {
+              config.id = parsedConfig.uid;
+            } else if (parsedConfig.id) {
+              config.id = parsedConfig.id;
+            }
+            // Merge any other config options
+            Object.assign(config, parsedConfig);
+          } catch (e) {
+            console.error('Failed to parse config from URL:', e);
+          }
+        }
+      }
+      
+      // If no ID is available at all, show a warning
+      if (!config.id && !config.uid) {
+        console.warn('No business ID/UID provided. Widget will use minimal default config.');
+        console.warn('Provide ?id=YOUR_BUSINESS_ID in the URL to fetch config from server.');
+      }
+      
+      return config;
+    }
+    
+    // Get website URL from URL parameters
+    function getWebsiteUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('url') || 'https://example.com';
+    }
+    
+    // Wait for icon font to load
+    function waitForFontLoad(fontFamily, timeout = 5000) {
+      return new Promise((resolve) => {
+        if (document.fonts && document.fonts.check) {
+          // Check if font is already loaded
+          if (document.fonts.check(`12px "${fontFamily}"`)) {
+            resolve(true);
+            return;
+          }
+          
+          // Wait for font to load
+          document.fonts.ready.then(() => {
+            if (document.fonts.check(`12px "${fontFamily}"`)) {
+              resolve(true);
+            } else {
+              console.warn(`Font ${fontFamily} may not be loaded correctly`);
+              resolve(false);
+            }
+          });
+          
+          // Timeout fallback
+          setTimeout(() => {
+            resolve(false);
+          }, timeout);
+        } else {
+          // Fallback if Font Loading API is not available
+          setTimeout(() => resolve(true), 1000);
+        }
+      });
+    }
+    
+    // Initialize the widget (fallback - liveSiteAsyncInit is called automatically by loader)
+    async function initializeWidget() {
+      // This function is kept for backwards compatibility but liveSiteAsyncInit above handles initialization
+      console.log('initializeWidget called - widget should already be initialized via liveSiteAsyncInit');
+    }
+    
+    // Load website in iframe
+    function loadWebsite() {
+      const websiteUrl = getWebsiteUrl();
+      const iframe = document.getElementById('website-iframe');
+      
+      console.log('Loading website in iframe:', websiteUrl);
+      iframe.src = websiteUrl;
+      
+      iframe.onload = () => {
+        console.log('Website loaded in iframe');
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ 
+              type: 'website-loaded', 
+              url: websiteUrl 
+            }, '*');
+          }
+        } catch (e) {
+          // Cross-origin
+        }
+      };
+      
+      iframe.onerror = () => {
+        console.error('Failed to load website in iframe');
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ 
+              type: 'website-load-error', 
+              url: websiteUrl 
+            }, '*');
+          }
+        } catch (e) {
+          // Cross-origin
+        }
+      };
+    }
+    
+    // Initialize when page loads
+    window.addEventListener('load', () => {
+      loadWebsite();
+      
+      // Initialize widget after a short delay to ensure script and CSS are loaded
+      setTimeout(() => {
+        initializeWidget().catch(err => {
+          console.error('Error initializing widget:', err);
+        });
+      }, 500);
+    });
+    
+    // Also handle async widget loading
+    if (window.LiveSite) {
+      setTimeout(() => {
+        initializeWidget().catch(err => {
+          console.error('Error initializing widget (async):', err);
+        });
+      }, 100);
+    }
+  </script>
+</body>
+</html>

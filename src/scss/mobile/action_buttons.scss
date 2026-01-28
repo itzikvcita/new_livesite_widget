@@ -1,0 +1,99 @@
+#livesite_action_buttons {
+  @include reset;
+  // @include text-size-adjust;
+
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  z-index: 2147483641;
+  @include i-left(0);
+  @include box-sizing(border-box);
+
+  .ls-actions {
+    position: relative;
+    height: 100%;
+    overflow: auto;
+
+    .ls-actions-C {
+      position: absolute;
+      bottom: 52px;
+      max-height: 100%;
+      overflow: auto;
+      width: 100%;
+    }
+  }
+
+  .ls-action {
+    @include base_icon_action_buttons;
+
+    position: relative;
+    display: block;
+    margin: 0px 20px 25px;
+    @include square_size($action_icon_size_mobile);
+    line-height: 27px;
+
+    &:first-child {
+      margin-top: 60px;
+    }
+
+    .ls-counter {
+      position: absolute;
+      top: -5px;
+      padding: 0 5px;
+      min-width: 10px;
+      height: 22px;
+      line-height: 22px;
+      text-align: center;
+      @include border-radius(22px);
+      @include font-size(13);
+
+      left: 67%;
+    }
+
+    > span {
+      position: absolute;
+      width: 250px;
+      line-height: $action_icon_size_mobile;
+      height: $action_icon_size_mobile;
+      @include i-text-align(left);
+      @include ellipsis;
+
+      em {
+        width: 100%;
+        padding: 0 15px;
+        letter-spacing: 1px;
+        @include font-size(16);
+
+        line-height: $action_icon_size_mobile;
+      }
+    }
+
+    &:before {
+      float: left;
+      @include square_size($action_icon_size_mobile);
+      line-height: $action_icon_size_mobile;
+      font-size: 27px;
+      text-align: center;
+    }
+
+    &.ls-rtl:before {
+      float: right;
+    }
+
+    &.ls-icon-credit-card:before {
+      font-size: 21px;
+    }
+  }
+
+  .ls-actions-close {
+    position: absolute;
+    bottom: 0px;
+    margin: 0px 20px 12px;
+    font-size: 16px;
+
+    &:before {
+      @include square_size($action_icon_size_mobile);
+      line-height: $action_icon_size_mobile;
+    }
+  }
+}

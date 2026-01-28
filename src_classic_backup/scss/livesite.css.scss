@@ -1,0 +1,24 @@
+@import "compass-compat";
+@import "icomoon/style";
+@import "icomoon/livesite-icons";
+@import "theme";
+@import "mixins";
+@import "colorbox.css";
+@import "desktop/active_engage";
+@import "desktop/action_buttons";
+@import "desktop/welcome_box";
+@import "desktop/animation";
+// Modern theme styles (only apply when .ls-theme-modern class is present)
+@import "desktop/modern/active_engage";
+
+.ls-hide-desktop {
+  display: none !important;
+}
+
+.ls-show-desktop {
+  display: initial !important;
+}
+
+.ls-ensure-loaded {
+  position: fixed;
+}
