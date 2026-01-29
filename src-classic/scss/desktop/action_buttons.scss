@@ -1,0 +1,118 @@
+#livesite_action_buttons {
+  @include reset;
+
+  position: fixed;
+  z-index: 2147483641;
+  padding: 30px 15px 7px;
+  top: 0;
+  right: 0;
+  // right: -10000%; for hiding the action buttons (stil not working well)
+
+  .ls-welcome-box-C {
+    position: fixed;
+    top: 25px;
+    right: 73px;
+  }
+
+  .ls-welcome-box {
+    min-width: 170px;
+  }
+
+  .ls-action {
+    @include base_icon_action_buttons;
+
+    position: relative;
+    display: block;
+    @include square_size($action_icon_size);
+    margin-bottom: 13px;
+
+    @include box-shadow(0px 0px 11px 2px rgba(0, 0, 0, 0.25));
+
+    &:first-of-type:hover + .ls-welcome-box-C {
+      display: none;
+    }
+
+    .ls-counter {
+      position: absolute;
+      top: -4px;
+      padding: 0 5px;
+      min-width: 8px;
+      height: 18px;
+      line-height: 18px;
+      text-align: center;
+      @include border-radius(20px);
+      @include font-size(11);
+
+      left: 67%;
+    }
+
+    > span {
+      position: absolute;
+      top: 12px;
+      right: 100%;
+      min-width: 170px;
+      white-space: nowrap;
+
+      em {
+        display: block;
+        position: relative;
+        height: 29px;
+        line-height: 28px;
+        text-align: center;
+        @include border-radius(50px);
+        @include font-size(12);
+        letter-spacing: 1px;
+        padding: 0 20px;
+        right: 10px;
+      }
+    }
+
+    &:before {
+      @include square_size($action_icon_size);
+      line-height: $action_icon_size;
+      font-size: 26px;
+      text-align: center;
+      @include border-radius(50%);
+
+      float: left;
+    }
+
+    &.ls-icon-doc {
+
+      &:before {
+        text-indent: 1px;
+      }
+    }
+
+    &.ls-icon-mail {
+
+      &:before {
+        line-height: 53px;
+      }
+    }
+
+    &.ls-icon-credit-card {
+
+      &:before {
+        font-size: 23px;
+        line-height: 47px;
+      }
+    }
+  }
+
+  .livesite-client-welcome-box .ls-welcome-box-C {
+    top: -12px;
+  }
+
+  &.ls-visible {
+    // right: 0;
+  }
+}
+
+// ms edge
+@supports (-ms-accelerator:true) {
+
+  #livesite_action_buttons {
+    right: 15px;
+  }
+}

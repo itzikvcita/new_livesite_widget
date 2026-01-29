@@ -45,7 +45,12 @@
       padding-bottom: 10px;
     }
     
-    .widget-panel.production h2 {
+    .widget-panel.classic h2 {
+      color: #1747ac;
+      border-bottom-color: #1747ac;
+    }
+    
+    .widget-panel.modern h2 {
       color: #639d2c;
       border-bottom-color: #639d2c;
     }
@@ -99,29 +104,29 @@
   </style>
 </head>
 <body>
-  <h1>LiveSite Widget Comparison: Production vs Local</h1>
+  <h1>LiveSite Widget Comparison: Classic vs Modern</h1>
   
   <div class="comparison-container">
-    <!-- Production Widget Panel -->
-    <div class="widget-panel production">
-      <h2>Production Widget (CDN)</h2>
-      <iframe class="widget-frame" id="production-iframe" sandbox="allow-same-origin allow-scripts allow-forms allow-popups"></iframe>
-      <div class="status loading" id="production-status">Loading production widget...</div>
+    <!-- Classic Widget Panel -->
+    <div class="widget-panel classic">
+      <h2>Classic Widget</h2>
+      <iframe class="widget-frame" id="classic-iframe" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"></iframe>
+      <div class="status loading" id="classic-status">Loading classic widget...</div>
       <div class="info">
-        <strong>Source:</strong> <code>d2ra6nuwn69ktl.cloudfront.net/assets/livesite.js</code><br>
-        <strong>CSS:</strong> <code>d2ra6nuwn69ktl.cloudfront.net/assets/livesite.css</code><br>
+        <strong>Source:</strong> <code>/dist-classic/livesite.min.js</code><br>
+        <strong>CSS:</strong> <code>/dist-classic/livesite.min.css</code><br>
         <strong>Business ID:</strong> <code>WI-2HUTRFBQZWZWH7EF835C</code>
       </div>
     </div>
     
-    <!-- Local Widget Panel -->
-    <div class="widget-panel local">
-      <h2>Local Widget (Development)</h2>
-      <iframe class="widget-frame" id="local-iframe" sandbox="allow-same-origin allow-scripts allow-forms allow-popups"></iframe>
-      <div class="status loading" id="local-status">Loading local widget...</div>
+    <!-- Modern Widget Panel -->
+    <div class="widget-panel modern">
+      <h2>Modern Widget</h2>
+      <iframe class="widget-frame" id="modern-iframe" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"></iframe>
+      <div class="status loading" id="modern-status">Loading modern widget...</div>
       <div class="info">
-        <strong>Source:</strong> <code>localhost:5000/dist/livesite.min.js</code><br>
-        <strong>CSS:</strong> <code>localhost:5000/dist/livesite.min.css</code><br>
+        <strong>Source:</strong> <code>/dist-modern/livesite.modern.min.js</code><br>
+        <strong>CSS:</strong> <code>/dist-modern/livesite.modern.min.css</code><br>
         <strong>Business ID:</strong> <code>WI-2HUTRFBQZWZWH7EF835C</code>
       </div>
     </div>
@@ -129,183 +134,77 @@
   
   <script>
     const businessId = 'WI-2HUTRFBQZWZWH7EF835C';
-    const testUrl = 'https://example.com'; // Use a simple test page
+    const currentUrl = new URL(window.location.href);
+    const baseUrl = currentUrl.origin;
     
-    // Production Widget Setup
-    function loadProductionWidget() {
-      const iframe = document.getElementById('production-iframe');
-      const status = document.getElementById('production-status');
+    // Classic Widget Setup
+    function loadClassicWidget() {
+      const iframe = document.getElementById('classic-iframe');
+      const status = document.getElementById('classic-status');
       
-      // Create a simple HTML page with production widget
-      const html = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <title>Production Widget</title>
-          <style>
-            body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
-            .info { background: #e9ecef; padding: 10px; margin-bottom: 20px; border-radius: 4px; }
-          </style>
-        </head>
-        <body>
-          <div class="info">
-            <strong>Production Widget</strong><br>
-            Loading from CDN: d2ra6nuwn69ktl.cloudfront.net
-          </div>
-          <div id="widget-container"></div>
-          
-          <script type='text/javascript' charset='utf-8'>
-            window.liveSiteAsyncInit = function() {
-              console.log('Production widget initializing...');
-              if (window.LiveSite && window.LiveSite.init) {
-                window.LiveSite.init({
-                  id: '${businessId}'
-                });
-                console.log('Production widget initialized');
-                if (window.parent) {
-                  window.parent.postMessage({ type: 'production-widget-ready', success: true }, '*');
-                }
-              } else {
-                console.error('Production LiveSite not available');
-                if (window.parent) {
-                  window.parent.postMessage({ type: 'production-widget-ready', success: false, error: 'LiveSite not available' }, '*');
-                }
-              }
-            };
-            
-            (function(d, s, id){ 
-              var js, fjs = d.getElementsByTagName(s)[0],
-                  p = 'https://',
-                  r = Math.floor(new Date().getTime() / 1000000);
-              if (d.getElementById(id)) {return;}
-              js = d.createElement(s); js.id = id;
-              js.src = p + "d2ra6nuwn69ktl.cloudfront.net/assets/livesite.js?" + r;
-              js.onload = function() {
-                console.log('Production widget script loaded');
-              };
-              js.onerror = function() {
-                console.error('Failed to load production widget script');
-                if (window.parent) {
-                  window.parent.postMessage({ type: 'production-widget-ready', success: false, error: 'Script load failed' }, '*');
-                }
-              };
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'livesite-jssdk'));
-          <\/script>
-        </body>
-        </html>
-      `;
+      // Use widget-container.html approach for proper widget loading
+      const widgetContainerUrl = new URL('widget-container.html', window.location.href);
+      widgetContainerUrl.searchParams.set('url', 'https://example.com');
+      widgetContainerUrl.searchParams.set('id', businessId);
+      widgetContainerUrl.searchParams.set('version', 'classic');
+      widgetContainerUrl.searchParams.set('host', 'www.vcita.com');
+      widgetContainerUrl.searchParams.set('portalHost', 'clients.vcita.com');
+      widgetContainerUrl.searchParams.set('log', 'true');
       
-      iframe.srcdoc = html;
+      iframe.src = widgetContainerUrl.href;
       
       // Listen for messages from iframe
-      window.addEventListener('message', function(event) {
-        if (event.data && event.data.type === 'production-widget-ready') {
+      const messageHandler = function(event) {
+        if (event.data && event.data.type === 'livesite-widget-initialized') {
           if (event.data.success) {
-            status.textContent = 'Production widget loaded successfully';
+            status.textContent = 'Classic widget loaded successfully';
             status.className = 'status success';
           } else {
-            status.textContent = 'Production widget failed: ' + (event.data.error || 'Unknown error');
+            status.textContent = 'Classic widget failed: ' + (event.data.error || 'Unknown error');
             status.className = 'status error';
           }
         }
-      });
+      };
+      window.addEventListener('message', messageHandler);
+      iframe._messageHandler = messageHandler;
     }
     
-    // Local Widget Setup
-    function loadLocalWidget() {
-      const iframe = document.getElementById('local-iframe');
-      const status = document.getElementById('local-status');
+    // Modern Widget Setup
+    function loadModernWidget() {
+      const iframe = document.getElementById('modern-iframe');
+      const status = document.getElementById('modern-status');
       
-      // Get the base URL for local files
-      const currentUrl = new URL(window.location.href);
-      const basePath = currentUrl.pathname.substring(0, currentUrl.pathname.lastIndexOf('/'));
-      const baseUrl = currentUrl.origin + basePath;
+      // Use widget-container.html approach for proper widget loading
+      const widgetContainerUrl = new URL('widget-container.html', window.location.href);
+      widgetContainerUrl.searchParams.set('url', 'https://example.com');
+      widgetContainerUrl.searchParams.set('id', businessId);
+      widgetContainerUrl.searchParams.set('version', 'modern');
+      widgetContainerUrl.searchParams.set('host', 'www.vcita.com');
+      widgetContainerUrl.searchParams.set('portalHost', 'clients.vcita.com');
+      widgetContainerUrl.searchParams.set('log', 'true');
       
-      // Create a simple HTML page with local widget
-      const html = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <title>Local Widget</title>
-          <style>
-            body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
-            .info { background: #e9ecef; padding: 10px; margin-bottom: 20px; border-radius: 4px; }
-          </style>
-          <!-- CSS will be loaded automatically by widget's loader.js based on device type -->
-        </head>
-        <body>
-          <div class="info">
-            <strong>Local Widget</strong><br>
-            Loading from: ${baseUrl}/../dist/livesite.min.js
-          </div>
-          <div id="widget-container"></div>
-          
-          <script type='text/javascript' charset='utf-8'>
-            window.liveSiteAsyncInit = function() {
-              console.log('Local widget initializing...');
-              if (window.LiveSite && window.LiveSite.init) {
-                window.LiveSite.init({
-                  id: '${businessId}',
-                  host: 'www.vcita.com',
-                  portalHost: 'clients.vcita.com',
-                  desktopCss: '${baseUrl}/../dist/livesite.min.css',
-                  mobileCss: '${baseUrl}/../dist/livesite.mobile.min.css',
-                  log: true
-                });
-                console.log('Local widget initialized');
-                if (window.parent) {
-                  window.parent.postMessage({ type: 'local-widget-ready', success: true }, '*');
-                }
-              } else {
-                console.error('Local LiveSite not available');
-                if (window.parent) {
-                  window.parent.postMessage({ type: 'local-widget-ready', success: false, error: 'LiveSite not available' }, '*');
-                }
-              }
-            };
-            
-            (function() {
-              var script = document.createElement('script');
-              script.src = '${baseUrl}/../dist/livesite.min.js';
-              script.onload = function() {
-                console.log('Local widget script loaded');
-              };
-              script.onerror = function() {
-                console.error('Failed to load local widget script');
-                if (window.parent) {
-                  window.parent.postMessage({ type: 'local-widget-ready', success: false, error: 'Script load failed' }, '*');
-                }
-              };
-              document.head.appendChild(script);
-            })();
-          <\/script>
-        </body>
-        </html>
-      `;
-      
-      iframe.srcdoc = html;
+      iframe.src = widgetContainerUrl.href;
       
       // Listen for messages from iframe
-      window.addEventListener('message', function(event) {
-        if (event.data && event.data.type === 'local-widget-ready') {
+      const messageHandler = function(event) {
+        if (event.data && event.data.type === 'livesite-widget-initialized') {
           if (event.data.success) {
-            status.textContent = 'Local widget loaded successfully';
+            status.textContent = 'Modern widget loaded successfully';
             status.className = 'status success';
           } else {
-            status.textContent = 'Local widget failed: ' + (event.data.error || 'Unknown error');
+            status.textContent = 'Modern widget failed: ' + (event.data.error || 'Unknown error');
             status.className = 'status error';
           }
         }
-      });
+      };
+      window.addEventListener('message', messageHandler);
+      iframe._messageHandler = messageHandler;
     }
     
     // Load both widgets
     window.addEventListener('load', function() {
-      loadProductionWidget();
-      loadLocalWidget();
+      loadClassicWidget();
+      loadModernWidget();
     });
   </script>
 </body>

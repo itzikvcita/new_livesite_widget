@@ -15,8 +15,15 @@
   }
 
   function handleMessage(evt) {
-    if (evt.origin !== config.hostWithProtocol()) {
-      liveSite.log("Identify client event bad host " + evt.origin + " != " + config.hostWithProtocol());
+    // Allow messages from both the main host and portal host (protocol-agnostic)
+    var expectedHost = config.hostWithProtocol();
+    var portalHost = config.portalWithProtocol();
+    var originHost = evt.origin.replace(/^https?:\/\//, '').replace(/^https?:\/\//, '');
+    var expectedHostOnly = expectedHost.replace(/^https?:\/\//, '');
+    var portalHostOnly = portalHost.replace(/^https?:\/\//, '');
+    
+    if (originHost !== expectedHostOnly && originHost !== portalHostOnly) {
+      liveSite.log("Identify client event bad host " + evt.origin + " != " + expectedHost + " or " + portalHost);
     } else {
       var msg = $.parseJSON(evt.data);
 

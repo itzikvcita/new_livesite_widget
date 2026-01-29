@@ -1,0 +1,49 @@
+#livesite_engage_button,
+#livesite_action_buttons {
+
+  .ls-welcome-box {
+    @include reset;
+
+    @include border-radius(5px);
+    @include i-text-align(left);
+    cursor: pointer;
+    @include box-sizing(border-box);
+    @include i-padding(10px, 22px, 12px, 15px);
+    letter-spacing: 0.6px;
+    position: relative;
+
+    .ls-close {
+      position: absolute;
+      width: 16px;
+      text-align: center;
+      @include i-right(5px);
+      top: 3px;
+      @include icon-cancel(true);
+      @include transition(opacity 0.25s);
+      @include opacity(0.8);
+
+      &:hover {
+        @include opacity(1);
+      }
+
+      &:before {
+        font-size: 10px;
+        line-height: 18px;
+        width: 18px;
+      }
+    }
+
+    .ls-title {
+      line-height: initial;
+      @include font-size(13);
+      @include ellipsis;
+    }
+
+    .ls-content {
+      @include font-size(11);
+      @include ellipsis;
+      font-weight: 300;
+    }
+  }
+}
+

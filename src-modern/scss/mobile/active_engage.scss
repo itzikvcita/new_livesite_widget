@@ -1,0 +1,428 @@
+#livesite_engage_button {
+  @include reset;
+  // @include text-size-adjust;
+
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 2147483640;
+  width: 100%;
+  padding: 13px 0 12px;
+  @include background-image(linear-gradient(top, transparent, rgba(0,0,0,0.65)));
+
+  a.ls-engage-button {
+    display: block;
+    margin: 0 19px;
+    @include font-size(16);
+    height: $engage_button_height_mobile;
+    line-height: $engage_button_height_mobile;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    @include border-radius(50px);
+  }
+
+  .ls-trigger-C + .ls-engage-button,
+  .ls-trigger-P + .ls-engage-button {
+    @include i-margin-mirror(82px, 19px);
+  }
+
+  .ls-trigger-C + .ls-trigger-P {
+    width: 64px;
+    text-align: center;
+
+    .ls-actions-open {
+      @include i-margin-mirror(0, 0);
+    }
+
+    + .ls-engage-button {
+      @include i-margin-mirror(143px, 19px);
+    }
+  }
+
+  .ls-trigger-C,
+  .ls-trigger-P {
+    @include i-float(left);
+    width: 74px;
+    height: $engage_button_height_mobile;
+
+    .ls-actions-open {
+      @include i-margin-mirror(19px, 0);
+    }
+  }
+
+  .ls-actions-open {
+    // position: absolute;
+    display: inline-block;
+    @include border-radius(50%);
+    @include box-shadow(0px 0px 6px 2px rgba(0, 0, 0, 0.25));
+
+    &:before {
+      @include square_size($action_icon_size_mobile);
+      line-height: $action_icon_size_mobile;
+      @include font-size(18);
+      text-align: center;
+    }
+  }
+}
+
+#livesite_active_engage {
+  // @include text-size-adjust;
+  @include reset;
+
+  position: fixed;
+  left: 0;
+  top: 0; // Modern: start from top for full-screen
+  width: 100%;
+  height: 100%;
+  @include box-sizing(content-box !important);
+  overflow: hidden;
+  z-index: 2147483641;
+  background: #ffffff; // Modern: white background for full-screen chat
+
+  *:before,
+  *:after {
+    box-sizing: content-box;
+  }
+
+  .ls-ae-C {
+    position: relative;
+    height: 100%;
+    overflow: hidden; // Modern: prevent scrolling on container
+    display: flex; // Modern: flexbox for full-screen layout
+    flex-direction: column;
+  }
+
+  .ls-ae {
+    position: relative; // Modern: relative for flex layout
+    width: 100%;
+    height: 100%; // Modern: full height
+    display: flex; // Modern: flexbox
+    flex-direction: column;
+    background: #ffffff; // Modern: white background
+
+    @include box-shadow(none); // Modern: no shadow for full-screen
+  }
+
+  .ls-content {
+    padding: 20px; // Modern: slightly less padding for full-screen
+    flex: 1; // Modern: take available space
+    overflow-y: auto; // Modern: allow scrolling for chat messages
+    -webkit-overflow-scrolling: touch; // Modern: smooth scrolling on iOS
+
+    .ls-text a:hover {
+      text-decoration: underline;
+      transition: opacity 0.2s ease; // Modern: smooth hover
+    }
+
+    .ls-more-actions-C {
+      @include i-float(right);
+
+      + .ls-main-action {
+        @include i-margin-mirror(0, 50px);
+      }
+    }
+
+    .ls-tooltip-menu:after {
+      content: " ";
+      height: 8px;
+      width: 100%;
+      position: absolute;
+      top: 100%;
+      left: 0px;
+    }
+
+    .ls-more-actions {
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &:before {
+        width: 38px;
+        height: 38px;
+        line-height: 39px;
+        font-size: 17px;
+        border-width: 1px;
+        border-style: solid;
+        @include border-radius(50px);
+      }
+    }
+  }
+
+  .ls-ae-top {
+    position: absolute;
+    top: 14px;
+    @include i-right(55px);
+  }
+
+  .ls-powered-by,
+  .ls-promotional-link {
+    position: relative;
+    letter-spacing: 0.3px;
+    @include font-size(11);
+
+    em {
+      font-weight: bold;
+    }
+
+    &:hover {
+      @include opacity(1);
+    }
+  }
+
+  a.ls-powered-by,
+  .ls-powered-by a {
+    @include opacity(0.6);
+  }
+
+  .ls-promotional-link {
+    @include opacity(0.8);
+  }
+
+  .ls-close {
+    position: absolute;
+    top: 12px; // Modern: slightly more padding from top
+    @include i-right(12px); // Modern: more padding from right
+    @include icon-cancel;
+    z-index: 10; // Modern: ensure close button is on top
+    transition: opacity 0.2s ease; // Modern: smooth hover
+
+    &:before {
+      width: 24px; // Modern: slightly larger
+      height: 24px;
+      padding: 10px;
+      font-size: 14px;
+      line-height: 24px;
+      @include border-radius(50%); // Modern: circular close button
+      background: rgba(0, 0, 0, 0.05); // Modern: subtle background
+    }
+
+    &:hover:before {
+      background: rgba(0, 0, 0, 0.1); // Modern: darker on hover
+    }
+  }
+
+  .ls-title {
+    display: inline-block;
+    position: relative;
+    top: -4px;
+    margin-top: 10px;
+    @include font-size(24);
+  }
+
+  .ls-text {
+    @include font-size(13);
+    margin: 2px 0 13px;
+    @include i-padding-mirror(0, 20px);
+    line-height: 1.6em;
+
+    em {
+      font-style: italic;
+    }
+  }
+
+  .ls-photo {
+    display: inline-block;
+    @include i-margin-mirror(0, 12px);
+    max-width: 76px;
+    max-height: 76px;
+    overflow: hidden;
+
+    img {
+      @include border-radius(5px, 5px);
+      max-width: 72px;
+      max-height: 72px;
+      display: inline-block;
+    }
+
+    + .ls-title {
+      top: -5px;
+      max-width: 240px;
+    }
+  }
+
+  .ls-main-action-C + .ls-powered-by {
+    text-align: center;
+    margin: 13px 0 -9px;
+  }
+
+  a.ls-main-action {
+    display: block;
+    max-width: 100%;
+    padding: 0 25px;
+    height: $main_action_height_mobile;
+    line-height: $main_action_height_mobile - 2;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    @include font-size(16);
+    @include border-radius(50px);
+    @include ellipsis;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .ls-inline-actions {
+    @include cf;
+    padding: 0 14px 5px;
+    border-top-width: 1px;
+    botder-top-style: solid;
+  }
+
+  .ls-actions-C {
+    @include i-float(left);
+    width: 245px;
+    @include cf;
+  }
+
+  .ls-action-C {
+    position: relative;
+    @include i-float(left);
+    line-height: 1.3em;
+    width: 61px;
+    padding-top: 7px;
+    text-align: center;
+    line-height: 13px;
+    @include font-size(10);
+
+    .ls-action-text {
+      display: block;
+      text-align: center;
+    }
+
+    .ls-action {
+      display: inline-block;
+      @include square_size($inline_action_icon_size);
+      @include base_icon_active_engage;
+      margin: 0 auto 6px;
+
+      &:before {
+        display: block;
+        line-height: $inline_action_icon_size;
+        font-size: 19px;
+      }
+
+      &.ls-my-account {
+        span {
+          text-align: center;
+        }
+
+        &:before {
+          font-size: 15px;
+        }
+
+        .ls-counter {
+          position: absolute;
+          display: none;
+          top: 6px;
+          padding: 0 4px;
+          min-width: 6px;
+          height: 14px;
+          line-height: 15px;
+          text-align: center;
+          @include border-radius(20px);
+          @include font-size(9);
+          left: 59%;
+        }
+      }
+
+      &.ls-more-actions {
+
+        &:before{
+          font-size: 8px;
+          @include box-shadow(none);
+        }
+      }
+
+      &.ls-icon-cal:before {
+        line-height: 37px;
+        letter-spacing: 1px;
+      }
+
+      &.ls-icon-env:before,
+      &.ls-icon-phone:before {
+        font-size: 17px;
+      }
+
+      &.ls-icon-credit-card:before {
+        font-size: 20px;
+      }
+
+      &.ls-icon-doc:before {
+        letter-spacing: 1px;
+        line-height: 37px;
+        font-size: 17px;
+      }
+    }
+  }
+
+  .ls-profile-action {
+    @include i-float(right);
+
+    .ls-action {
+      display: inline-block;
+    }
+  }
+
+  .ls-more-actions-C {
+    position: relative;
+    @include cf;
+    @include i-float(left);
+  }
+
+  .ls-tooltip-menu {
+    position: absolute;
+    @include i-right(0px);
+    bottom: 125%;
+    @include i-padding(13px, 30px, 13px, 10px);
+    @include border-radius(4px);
+  }
+
+  .ls-tooltip-menu-item {
+    display: inline-block;
+    line-height: 27px;
+    margin-bottom: 1px;
+    vertical-align: top;
+    letter-spacing: 1px;
+    @include ellipsis;
+    @include font-size(12);
+    @include i-text-align(left);
+
+    &:before {
+      width: 34px;
+      vertical-align: middle;
+      line-height: 25px;
+      text-align: center;
+      @include font-size(17);
+    }
+
+    &.ls-icon-credit-card:before {
+      letter-spacing: 0;
+      line-height: 9px;
+    }
+
+    &.ls-icon-cal:before {
+      line-height: 11px;
+    }
+
+    &.ls-icon-phone:before,
+    &.ls-icon-doc:before,
+    &.ls-icon-env:before {
+      line-height: 9px;
+      font-size: 15px;
+    }
+
+    &.ls-icon-doc:before {
+      letter-spacing: 1px;
+    }
+
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  }
+}

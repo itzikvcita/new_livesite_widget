@@ -78,14 +78,38 @@
       }
     };
     
-    // Load widget script
+    // Load widget script based on version
     (function() {
-      const script = document.createElement('script');
+      const urlParams = new URLSearchParams(window.location.search);
+      const version = urlParams.get('version') || 'classic'; // Default to classic
       const currentUrl = new URL(window.location.href);
-      // Use .min.js (production build) with cache busting
-      script.src = currentUrl.origin + '/dist/livesite.min.js?v=' + Date.now();
+      
+      // Determine script path based on version
+      let scriptPath;
+      if (version === 'modern') {
+        scriptPath = '/dist-modern/livesite.modern.min.js';
+      } else {
+        scriptPath = '/dist-classic/livesite.min.js';
+      }
+      
+      const script = document.createElement('script');
+      script.src = currentUrl.origin + scriptPath + '?v=' + Date.now();
       script.onerror = function() {
         console.error('Failed to load widget script from:', script.src);
+        if (window.parent && window.parent !== window) {
+          try {
+            window.parent.postMessage({ 
+              type: 'livesite-widget-initialized', 
+              success: false,
+              error: 'Failed to load widget script: ' + script.src
+            }, '*');
+          } catch (e) {
+            // Cross-origin
+          }
+        }
+      };
+      script.onload = function() {
+        console.log('Widget script loaded: ' + version + ' version');
       };
       document.head.appendChild(script);
     })();
@@ -95,6 +119,10 @@
     function getConfig() {
       const urlParams = new URLSearchParams(window.location.search);
       
+      // Get widget version (classic or modern)
+      const version = urlParams.get('version') || 'classic';
+      const currentUrl = new URL(window.location.href);
+      
       // Get business ID/UID from URL parameters (can be 'id', 'uid', or 'businessId')
       const businessId = urlParams.get('id') || urlParams.get('uid') || urlParams.get('businessId');
       
@@ -102,12 +130,28 @@
       const host = urlParams.get('host') || 'www.vcita.com';
       const portalHost = urlParams.get('portalHost') || 'clients.vcita.com';
       
+      // Set CSS URLs based on version
+      let desktopCss, mobileCss;
+      if (version === 'modern') {
+        desktopCss = currentUrl.origin + '/dist-modern/livesite.modern.min.css';
+        mobileCss = currentUrl.origin + '/dist-modern/livesite.modern.mobile.min.css';
+      } else {
+        desktopCss = currentUrl.origin + '/dist-classic/livesite.min.css';
+        mobileCss = currentUrl.origin + '/dist-classic/livesite.mobile.min.css';
+      }
+      
       // Minimal config - widget will fetch the rest from server using the ID
       const config = {
         host: host,
         portalHost: portalHost,
+        desktopCss: desktopCss,
+        mobileCss: mobileCss,
         log: urlParams.get('log') === 'true' || false, // Enable logging for debugging
       };
+      
+      console.log('Widget version:', version);
+      console.log('Desktop CSS:', desktopCss);
+      console.log('Mobile CSS:', mobileCss);
       
       // If business ID is provided, set it as 'id' so widget fetches config from server
       // Production format: id: 'WI-2HUTRFBQZWZWH7EF835C'

@@ -62,27 +62,36 @@
   function bindAction(bindingsContainer, action) {
     bindingsContainer.on('click.livesite', '.livesite-' + action, function (e) {
       var options = dataToOptions($(this).data());
-      var href = e.originalEvent.srcElement.href
-      var params = href && href.split('?')[1]
-      if(params) {
-          params = params.split('&').map(function(param){return param.split('=')})
+      // Use the link's href from the matched element (this). Production uses
+      // e.originalEvent.srcElement (IE) or e.originalEvent.target (Chrome); we use
+      // this (the link) so it works when clicking on child nodes (e.g. text).
+      var href = (this && (this.href !== undefined)) ? this.href : ($(this).attr('href') || '');
+      var rawHref = $(this).attr('href') || '';
+      var params = href && href.split('?')[1];
+      if (params) {
+          params = params.split('&').map(function(param){return param.split('=')});
           params.forEach(function(param) {
-              options[param[0]] = param[1]
+              options[param[0]] = param[1];
               if(param[0] === 'o') {
                   if(_isB64Encoded(param[1])) {
-                      options.origin = _b64DecodeUnicode(param[1]).trim()
-                      options[param[0]] = options.origin
+                      options.origin = _b64DecodeUnicode(param[1]).trim();
+                      options[param[0]] = options.origin;
                   } else {
-                      options.origin = param[1]
+                      options.origin = param[1];
                   }
-
               }
               if(param[0] === 's'){
-                  options.source = param[1]
+                  options.source = param[1];
               }
-          })
+          });
       }
-      liveSite[action](options);
+      // When the server provides a full URL in the link (production behavior), open it
+      // directly. Use raw attribute so we don't treat href="#" (resolved to page URL) as a full URL.
+      if (rawHref && rawHref !== '#' && (rawHref.indexOf('http://') === 0 || rawHref.indexOf('https://') === 0)) {
+        liveSite.opener(href);
+      } else {
+        liveSite[action](options);
+      }
       e.preventDefault();
     });
   }

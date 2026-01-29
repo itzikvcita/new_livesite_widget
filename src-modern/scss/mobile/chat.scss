@@ -1,0 +1,174 @@
+// Modern chat interface styles for mobile
+// Full-screen chat experience
+
+// Chat messages container - full height on mobile
+.ls-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  -webkit-overflow-scrolling: touch;
+  background: #ffffff;
+}
+
+// Chat message wrapper
+.ls-chat-message {
+  display: flex;
+  margin-bottom: 16px;
+  animation: message-fade-in 0.3s ease;
+  
+  &.ls-chat-message-bot {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  
+  &.ls-chat-message-user {
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+}
+
+// Chat avatar - slightly larger on mobile
+.ls-chat-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+  flex-shrink: 0;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .ls-chat-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+  }
+}
+
+.ls-chat-message-user .ls-chat-avatar {
+  margin-right: 0;
+  margin-left: 10px;
+  order: 2;
+}
+
+// Chat bubble - larger on mobile
+.ls-chat-bubble {
+  max-width: 80%;
+  padding: 14px 18px;
+  border-radius: 18px;
+  word-wrap: break-word;
+  position: relative;
+  
+  &.ls-chat-bubble-bot {
+    background: #f3f4f6;
+    color: #1f2937;
+    border-bottom-left-radius: 4px;
+  }
+  
+  &.ls-chat-bubble-user {
+    background: #3b82f6;
+    color: #ffffff;
+    border-bottom-right-radius: 4px;
+  }
+}
+
+// Chat message text - larger font on mobile
+.ls-chat-message-text {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+// Chat message time
+.ls-chat-message-time {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+// Typing indicator
+.ls-typing-indicator {
+  display: flex;
+  margin-bottom: 16px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  
+  .ls-typing-bubble {
+    background: #f3f4f6;
+    padding: 14px 18px;
+    border-radius: 18px;
+    border-bottom-left-radius: 4px;
+  }
+  
+  .ls-typing-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  
+  .ls-typing-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #6b7280;
+    animation: typing-pulse 1.4s infinite;
+    
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+// Quick reply chips - full width on mobile
+.ls-quick-replies {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  margin-bottom: 16px;
+  padding: 0 16px;
+}
+
+.ls-quick-reply-chip {
+  display: block;
+  width: 100%;
+  padding: 14px 20px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1f2937;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  
+  &:hover,
+  &:active {
+    background: #f9fafb;
+    border-color: #3b82f6;
+    color: #3b82f6;
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}

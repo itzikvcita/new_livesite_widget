@@ -1,0 +1,309 @@
+/* mobile */
+
+// animations keyframes
+@include keyframes(jump){
+  0% { @include transform(translate(0, 75%)); }
+  50% { @include transform(translate(0, -8px)); }
+  100% { @include transform(translate(0, 0)); }
+}
+
+@include keyframes(ab_enter) {
+  from {
+    @include opacity(0);
+    @include transform(rotate(95deg) translate(20%, 0) scale(1.1));
+  }
+
+  to {
+    @include opacity(0.8);
+    @include transform(rotate(0deg) translate(0, 0));
+  }
+}
+
+
+#livesite_action_buttons {
+  height: 0;
+  @include opacity(0);
+
+  .ls-action {
+    @include opacity(0);
+    @include transform(translate(0,5px));
+
+    &:before {
+      @include transform(rotate(-75deg) );
+    }
+
+    span {
+      @include transform-origin(-100%, 0);
+      @include opacity(0);
+      @include transform(scale(0, 1) translate(100%, 0));
+
+      &.ls-rtl {
+        @include transform-origin(100%, 0);
+      }
+    }
+
+    &.ls-rtl:before {
+      @include transform(rotate(75deg) );
+    }
+  }
+
+  &.ls-animate-enter {
+    @include transition(opacity 0.45s);
+
+    .ls-action {
+      @include transition(all 0.7s ease 0.15);
+
+      &:before {
+        @include transition(all 0.7s ease 0.15);
+      }
+
+      @for $i from 1 through 10 {
+        $delay: ($i*0.07);
+        &:nth-of-type(#{10-$i}) {
+          @include transition-delay($delay+s);
+
+          &:before {
+            @include transition-delay($delay+s);
+          }
+
+          span {
+            @include transition(all 0.3s ease-in-out ($delay)+s);
+          }
+        }
+
+      }
+    }
+  }
+
+  &.ls-animate-hover {
+    .ls-action {
+      @include transition-delay(0s !important);
+
+      &:before {
+        @include transition-delay(0s !important);
+      }
+    }
+  }
+
+  &.ls-visible {
+    height: 100%;
+    @include opacity(1);
+
+    .ls-action {
+      @include opacity(1);
+      @include transform(translate(0,0));
+
+      &:before {
+        @include transform(rotate(0deg) scale(1));
+      }
+
+      span {
+        @include opacity(1);
+        @include transform(scale(1) translate(0, 0));
+
+        &.ls-rtl {
+        }
+      }
+    }
+  }
+
+  .ls-counter {
+    width: 0;
+    @include opacity(0);
+    @include transform(scale(0));
+
+    &.ls-animate-enter {
+      @include transition(opacity 0.25s, transform 0.25s);
+    }
+
+    &.ls-visible {
+      width: auto;
+      @include opacity(1);
+      @include transform(scale(1));
+    }
+  }
+}
+
+#livesite_engage_button {
+  // bottom: -74px;
+  @include opacity(0);
+
+  &.ls-animate-enter {
+    @include transition(all 0.6s);
+  }
+
+  &.ls-visible {
+    // bottom: 0px;
+    @include opacity(1);
+  }
+
+  .ls-actions-close,
+  .ls-actions-open {
+    @include transform(scale(0));
+
+    &.ls-visible {
+      @include transform(scale(1));
+    }
+
+    &.ls-animate-enter {
+      @include transition(all 0.05s);
+    }
+  }
+}
+
+#livesite_active_engage {
+  // initial state of css
+  top: 100%;
+  @include opacity(0);
+
+  .ls-ae {
+    bottom: -100%;
+  }
+
+  .ls-inline-actions {
+
+    .ls-action {
+      @include opacity(0);
+
+      &:before {
+        @include opacity(0);
+        @include transform(scale(2.5) rotate(-75deg) translate(-25%, 0%));
+      }
+    }
+  }
+
+  // end state of the css
+  &.ls-animate-enter {
+    @include transition(opacity 0.45s);
+
+    .ls-ae {
+      @include transition(all 0.45s ease-out);
+    }
+
+    .ls-content > * {
+      @include animation(jump 0.5s ease 0.25s);
+    }
+  }
+
+  &.ls-animate-hover {
+    .ls-action {
+
+      &:before,
+      .ls-counter {
+        @include transition(all 0.2s);
+      }
+
+      &:active,
+      &:active:after {
+        @include transform(scale(0.97));
+        @include opacity(0.8);
+      }
+    }
+  }
+
+  &.ls-visible {
+    top: 0;
+    @include opacity(1);
+
+    .ls-ae {
+      bottom: 0;
+    }
+
+    .ls-inline-actions .ls-action {
+      @include opacity(1);
+
+      &:before {
+        @include transform(scale(1) rotate(0deg) translate(0, 0));
+        @include opacity(1);
+      }
+    }
+  }
+
+  // general inside css animations/effects
+  .ls-close {
+    @include opacity(0.5);
+    @include transition(opacity 0.25s);
+
+    &:hover {
+      @include opacity(1);
+    }
+  }
+
+  .ls-main-action {
+    @include transition(all .2s);
+
+    &:before {
+    }
+
+    &:hover {
+      @include opacity(0.95);
+    }
+  }
+
+  .ls-actions-C {
+
+    .ls-action,
+    .ls-more-actions {
+    }
+
+    .ls-more-actions-C {
+    }
+
+    .ls-tooltip-menu:before {
+    }
+  }
+
+  .ls-action {
+
+    &:before {
+    }
+
+    &.ls-my-account {
+
+      span {
+      }
+
+      &:before {
+      }
+
+      .ls-counter {
+      }
+    }
+
+    &.ls-more-actions {
+
+      &:before{
+      }
+    }
+  }
+
+  .ls-profile-action {
+
+    .ls-my-account {
+    }
+  }
+
+  .ls-more-actions-C {
+  }
+
+  .ls-tooltip-menu {
+    @include opacity(0);
+    z-index: -1;
+    @include transition(all 0.5s);
+
+    &.ls-visible {
+      @include opacity(1);
+      z-index: 0;
+    }
+  }
+
+  .ls-tooltip-menu-item {
+    @include transition(color 0.25s);
+
+    &:before {
+    }
+
+    &:hover {
+    }
+  }
+}

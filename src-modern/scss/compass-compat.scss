@@ -1,0 +1,96 @@
+// Compass compatibility layer - provides mixins that were used from Compass
+// These are now standard CSS, so we just provide the mixins for compatibility
+
+@mixin border-radius($radius...) {
+  // Handle multiple arguments (top-left, top-right, bottom-right, bottom-left)
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin border-top-radius($radius) {
+  -webkit-border-top-left-radius: $radius;
+  -webkit-border-top-right-radius: $radius;
+  -moz-border-radius-topleft: $radius;
+  -moz-border-radius-topright: $radius;
+  border-top-left-radius: $radius;
+  border-top-right-radius: $radius;
+}
+
+@mixin box-sizing($box-model) {
+  -webkit-box-sizing: $box-model;
+  -moz-box-sizing: $box-model;
+  box-sizing: $box-model;
+}
+
+@mixin transition($transition...) {
+  -webkit-transition: $transition;
+  -moz-transition: $transition;
+  -o-transition: $transition;
+  transition: $transition;
+}
+
+@mixin transition-delay($delay) {
+  -webkit-transition-delay: $delay;
+  -moz-transition-delay: $delay;
+  -o-transition-delay: $delay;
+  transition-delay: $delay;
+}
+
+@mixin transform($transform...) {
+  -webkit-transform: $transform;
+  -moz-transform: $transform;
+  -ms-transform: $transform;
+  -o-transform: $transform;
+  transform: $transform;
+}
+
+@mixin transform-origin($origin...) {
+  // Handle multiple arguments (x, y)
+  -webkit-transform-origin: $origin;
+  -moz-transform-origin: $origin;
+  -ms-transform-origin: $origin;
+  -o-transform-origin: $origin;
+  transform-origin: $origin;
+}
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  // IE8 fallback
+  filter: alpha(opacity=#{$opacity * 100});
+}
+
+@mixin box-shadow($shadow...) {
+  -webkit-box-shadow: $shadow;
+  -moz-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+
+@mixin user-select($select) {
+  -webkit-user-select: $select;
+  -moz-user-select: $select;
+  -ms-user-select: $select;
+  user-select: $select;
+}
+
+@mixin background-image($image) {
+  // Compass background-image mixin - handles gradients and images
+  // For gradients, Compass uses linear-gradient(top, ...) which we convert to linear-gradient(to bottom, ...)
+  $image-str: inspect($image);
+  @if str-index($image-str, 'linear-gradient(top,') {
+    // Replace 'top' with 'to bottom' for standard CSS
+    $converted: str-replace($image-str, 'linear-gradient(top,', 'linear-gradient(to bottom,');
+    background-image: unquote($converted);
+  } @else {
+    background-image: $image;
+  }
+}
+
+// Helper function for string replacement
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+  @return $string;
+}

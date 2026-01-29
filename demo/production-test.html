@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Production Widget Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .info {
+      background: #e9ecef;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .info code {
+      background: #f8f9fa;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Production Widget Test</h1>
+    <div class="info">
+      <strong>Business ID:</strong> <code>WI-G4Z915ASR3X020LMZSQ1</code><br>
+      <strong>Source:</strong> <code>d2ra6nuwn69ktl.cloudfront.net/assets/livesite.js</code><br>
+      <p style="margin-top: 10px;">This page loads the production widget from CDN. Click the scheduling button and check the browser console for any errors or logs.</p>
+    </div>
+    <div id="widget-container"></div>
+  </div>
+
+  <script type='text/javascript' charset='utf-8'>
+    window.liveSiteAsyncInit = function() {
+      console.log('Production widget async init called');
+      if (window.LiveSite && window.LiveSite.init) {
+        console.log('Initializing production widget...');
+        window.LiveSite.init({
+          id : 'WI-G4Z915ASR3X020LMZSQ1'
+        });
+        console.log('Production widget initialized');
+      } else {
+        console.error('LiveSite not available');
+      }
+    };
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0],
+          p = 'https://',
+          r = Math.floor(new Date().getTime() / 1000000);
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = p + "d2ra6nuwn69ktl.cloudfront.net/assets/livesite.js?" + r;
+      js.onload = function() {
+        console.log('Production widget script loaded');
+      };
+      js.onerror = function() {
+        console.error('Failed to load production widget script');
+      };
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'livesite-jssdk'));
+  </script>
+</body>
+</html>

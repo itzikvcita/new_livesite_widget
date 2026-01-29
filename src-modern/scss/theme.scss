@@ -1,0 +1,230 @@
+
+// Modern AI Chat Widget Theme - Inspired by Intercom/ChatGPT/Claude
+// Soft, modern color palette with high contrast for readability
+
+$mobile_overlay_bg              : rgba(0,0,0,0.75);
+$lightbox_loader_color          : #3b82f6; // Modern blue
+
+// unread counter
+$counter_bg                     : #ef4444; // Modern red
+$counter_color                  : #fff;
+
+/*
+-------------------------------------
+  AE LABEL and ACTIONS
+-------------------------------------
+*/
+
+// engage button and action menu buttons - Modern blue accent
+$engage_button_color            : #fff;
+$engage_button_bg               : #3b82f6; // Modern blue (Intercom-style)
+$engage_button_hover_bg         : #2563eb; // Darker blue on hover
+$engage_button_height           : 45px;
+$engage_button_height_mobile    : 50px;
+
+// account action - Soft gray
+$icon_account_bg_color          : rgba(107, 114, 128, 0.95); // Modern gray
+$icon_account_color             : #fff;
+
+// active engage actions color - Modern grays
+$icon_gray                      : #6b7280; // Modern gray
+$icon_white                     : #fff;
+$active_engage_actions_text     : #4b5563; // Darker gray for text
+
+// action menu text - Light background
+$actions_menu_title_bg          : rgba(249, 250, 251, 0.95); // Very light gray
+$actions_menu_title_text        : #1f2937; // Dark text
+
+// actions menu icon sizes
+$action_icon_size               : 50px;
+$action_icon_size_mobile        : 50px;
+
+// welcome box - Clean white/light background
+$welcome_box_bg                 : rgba(255, 255, 255, 0.98); // Almost white
+$welcome_box_text               : #1f2937; // Dark text for readability
+$welcome_box_close              : #9ca3af; // Medium gray
+
+/*
+-------------------------------------
+  ACTIVE ENGAGE
+-------------------------------------
+*/
+
+// size and location
+$active_engage_width            : 380px;
+$active_engage_right            : 80px;
+$engage_button_width            : 200px;
+$engage_button_right            : $active_engage_right + ($active_engage_width/2) - ($engage_button_width / 2);
+
+$active_engage_text_color       : #605956;
+$active_engage_link_color       : #6fa2fe;
+
+// active engage main action - Modern green
+$main_action_color            : #fff;
+$main_action_bg               : #10b981; // Modern green (Emerald)
+$main_action_hover_bg         : #059669; // Darker green on hover
+$main_action_height           : 50px;
+$main_action_height_mobile    : 40px;
+
+// active engage actions - Light, modern borders
+$inline_actions_border      : #e5e7eb; // Very light gray border
+$inline_actions_bg          : #f9fafb; // Very light gray background
+$inline_action_icon_size    : 38px;
+
+// more actions menu - Light, modern menu
+$tooltip_menu_bg           : rgba(255, 255, 255, 0.98); // White background
+$tooltip_menu_text         : #1f2937; // Dark text
+$tooltip_menu_text_hover   : #3b82f6; // Blue on hover
+
+// Controlled by the theme
+
+.ls-font-family-T {
+  font-family: "open sans", arial, sans-serif;
+
+  div, span, a, em, img {
+    font-family: "open sans", arial, sans-serif;
+  }
+}
+
+.ls-font-size-T {
+  font-size: 12px;
+}
+
+.ls-ae-bg-T {
+  background-color: #ffffff; // Pure white for modern look
+}
+
+.ls-ae-text-T {
+  color: $active_engage_text_color;
+
+  &:before {
+    color: $active_engage_text_color;
+    border-color: $active_engage_text_color;
+  }
+}
+
+.ls-ae-link-T, .ls-text a {
+  color: $active_engage_link_color;
+}
+
+.ls-main-action-T {
+  background-color: $main_action_bg;
+  color: $main_action_color;
+
+  &:hover {
+    background-color: $main_action_hover_bg;
+  }
+}
+
+.ls-action-T {
+  color: $engage_button_color;
+  background-color: $engage_button_bg;
+
+  &:hover {
+    background-color: $engage_button_hover_bg;
+  }
+
+  &:before {
+    color: $engage_button_color;
+  }
+}
+
+// Controlled only by CSS
+
+.ls-counter-T {
+  background-color: #ed131d;
+  color: #fff;
+}
+
+.ls-action-text-T.ls-desktop {
+  background-color: $actions_menu_title_bg;
+}
+
+.ls-action-text-T {
+  color: $actions_menu_title_text;
+}
+
+.ls-my-account-action-T {
+  background-color: $icon_account_bg_color;
+
+  &:before {
+    color: $icon_account_color;
+  }
+}
+
+.ls-inline-actions-T {
+  border-color: $inline_actions_border;
+  background-color: $inline_actions_bg;
+}
+
+.ls-inline-action-T {
+  background-color: $icon_white;
+  color: $icon_gray;
+
+  &:hover {
+    color: $icon_gray;
+  }
+}
+
+.ls-inline-item-T {
+  color: $icon_gray;
+
+  &:hover {
+    color: $icon_gray;
+  }
+}
+
+.ls-inline-action-text-T {
+  color: $active_engage_actions_text;
+}
+
+.ls-tooltip-menu-bg-T {
+  background-color: $tooltip_menu_bg;
+}
+
+a.ls-tooltip-menu-text-T {
+  color: $tooltip_menu_text;
+
+  &:before {
+    color: $tooltip_menu_text;
+  }
+
+  &:hover {
+    color: $tooltip_menu_text_hover;
+  }
+}
+
+a.ls-tooltip-menu-text-T:hover,
+a.ls-tooltip-menu-text-T:active {
+  color: $tooltip_menu_text_hover;
+
+  &:before {
+    color: $tooltip_menu_text_hover;
+  }
+}
+
+.ls-welcome-box-bg-T {
+  background-color: $welcome_box_bg;
+}
+
+.ls-welcome-box-text-T {
+  color: $welcome_box_text;
+
+  &:before {
+    color: $welcome_box_text;
+  }
+}
+
+.ls-overlay-T.ls-mobile {
+  background-color: $mobile_overlay_bg;
+}
+
+
+
+
+
+
+
+
+
+

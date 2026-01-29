@@ -1,0 +1,422 @@
+#livesite_engage_button {
+  @include reset;
+
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  z-index: 2147483640;
+  margin: 10px $engage_button_right 0 10px;
+  text-align: center;
+
+  a.ls-engage-button {
+    @include box-sizing(border-box);
+    display: inline-block;
+    padding: 2px 30px 0;
+    min-width: $engage_button_width;
+    line-height: $engage_button_height;
+    font-weight: 600; // Modern: slightly bolder
+    letter-spacing: 0.5px; // Modern: less letter spacing
+    text-decoration: none;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    @include font-size(16);
+    @include border-top-radius(12px); // Modern: more rounded (12px instead of 5px)
+    @include box-shadow(0px 4px 12px 0px rgba(0, 0, 0, 0.15)); // Modern: softer, more subtle shadow
+    transition: all 0.2s ease; // Modern: smooth transitions
+  }
+
+  .ls-welcome-box {
+    margin: 0 auto 10px;
+    display: inline-block;
+    max-width: $engage_button_width;
+  }
+}
+
+#livesite_active_engage {
+  @include reset;
+
+  position: fixed;
+  z-index: 2147483640;
+  bottom: 0px;
+  right: 0px;
+  margin: 10px $active_engage_right 0 10px;
+  width: $active_engage_width;
+  @include box-sizing(content-box !important);
+  @include border-top-radius(16px); // Modern: more rounded corners (16px instead of 6px)
+  // overflow: hidden;
+  background: #ffffff; // Modern: ensure white background
+  @include box-shadow(0px 8px 24px 0px rgba(0, 0, 0, 0.12)); // Modern: softer, elevated shadow
+  border: 1px solid rgba(0, 0, 0, 0.05); // Modern: subtle border for depth
+
+  .ls-ae,
+  .ls-ae-C,
+  .ls-content {
+    @include border-top-radius(16px); // Modern: match parent radius
+  }
+
+  .ls-content {
+    padding: 28px; // Modern: slightly more padding
+
+    .ls-text a:hover {
+      text-decoration: underline;
+      transition: opacity 0.2s ease; // Modern: smooth hover
+    }
+
+    .ls-more-actions-C {
+      @include i-float(right);
+
+      .ls-more-actions {
+
+        &:before {
+          content: "\e808"; // Menu icon
+          font-family: "ls-icomoon";
+          font-size: 17px;
+          width: 48px;
+          height: 48px;
+          line-height: 48px;
+          border-width: 1px;
+          border-style: solid;
+          @include border-radius(8px); // Modern: more rounded
+
+          @include opacity(0.8);
+          transition: all 0.2s ease; // Modern: smooth transitions
+        }
+
+        &:hover {
+
+          &:before {
+            @include opacity(1);
+          }
+        }
+      }
+
+      .ls-tooltip-menu {
+        @include i-right(0px);
+
+        &:after {
+          content: " ";
+          height: 8px;
+          width: 100%;
+          position: absolute;
+          top: 100%;
+          left: 0px;
+        }
+      }
+
+      + .ls-main-action {
+        @include i-margin-mirror(0, 60px);
+
+        &:before {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .ls-ae-top {
+    position: absolute;
+    top: 14px;
+
+    @include i-right(41px);
+  }
+
+  a.ls-powered-by,
+  .ls-powered-by a {
+    @include opacity(0.6);
+    line-height: 1.3em;
+    letter-spacing: 0.3px;
+    @include font-size(11);
+
+    em {
+      font-weight: bold;
+    }
+
+    &:hover {
+      @include opacity(1);
+    }
+  }
+
+  .ls-promotional-link {
+    position: relative;
+    top: -2px;
+    letter-spacing: 0.3px;
+    @include font-size(13);
+
+    @include opacity(0.8);
+
+    &:hover {
+      @include opacity(1);
+    }
+  }
+
+  .ls-close {
+    position: absolute;
+    top: 14px;
+    @include i-right(15px);
+    @include opacity(0.5);
+    @include icon-cancel;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .ls-title {
+    display: inline-block;
+    position: relative;
+    margin-top: 10px;
+    line-height: 1em;
+    letter-spacing: 1px;
+    @include font-size(24);
+  }
+
+  .ls-text {
+    margin: 9px 0 20px;
+    line-height: 1.6em;
+    @include font-size(14);
+    @include i-padding-mirror(0, 20px);
+
+    em {
+      font-style: italic;
+    }
+  }
+
+  .ls-photo {
+    display: inline-block;
+    max-width: 76px;
+    max-height: 76px;
+    overflow: hidden;
+
+    @include i-margin-mirror(0, 13px);
+
+    img {
+      @include border-radius(12px, 12px); // Modern: more rounded for photos
+      max-width: 72px;
+      max-height: 72px;
+      display: inline-block;
+    }
+
+    + .ls-title {
+      top: -4px;
+      max-width: 240px;
+    }
+  }
+
+  a.ls-main-action {
+    display: block;
+    padding: 0 25px;
+    line-height: $main_action_height;
+    text-decoration: none;
+    text-align: center;
+    letter-spacing: 1px;
+    @include font-size(15);
+    @include border-radius(5px);
+    @include ellipsis;
+
+    @include icon-angle-right;
+
+    &:before {
+      position: relative;
+      line-height: 50px;
+      @include opacity(0.35);
+
+      left: 7px;
+      float: right;
+    }
+
+    &.ls-rtl {
+      @include icon-angle-left;
+
+      &:before {
+        line-height: 50px;
+
+        right: 7px;
+        float: left;
+      }
+    }
+  }
+
+  .ls-main-action-C + .ls-powered-by {
+    text-align: center;
+    margin: 16px 0 -4px;
+  }
+
+  .ls-main-action-C {
+
+    .ls-more-actions {
+      position: relative\9;
+      top: -15px\9;
+    }
+  }
+
+  .ls-inline-actions {
+    @include cf;
+    padding: 0px 12px 9px;
+    border-top-width: 1px;
+    border-top-style: solid;
+  }
+
+  .ls-actions-C {
+    width: 277px;
+    @include cf;
+    @include i-float(left);
+
+    .ls-more-actions-C {
+      @include i-float(left);
+    }
+
+    .ls-tooltip-menu {
+      @include i-right(-50px);
+
+      &:after {
+        content: " ";
+        height: 10px;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0px;
+      }
+    }
+  }
+
+  .ls-action-C {
+    @include i-float(left);
+    position: relative;
+    width: 68px;
+    padding-top: 10px;
+    line-height: 1.3em;
+    text-align: center!important;
+    @include font-size(11);
+
+    .ls-action-text {
+      display: block;
+      text-align: center;
+    }
+
+    .ls-action {
+      display: inline-block;
+      @include square_size($inline_action_icon_size);
+      @include base_icon_active_engage;
+      margin: 0 auto 6px;
+
+      &:before {
+        display: block;
+        line-height: $inline_action_icon_size;
+        font-size: 19px;
+      }
+
+      &.ls-my-account {
+        span {
+          text-align: center;
+        }
+
+        &:before {
+          font-size: 15px;
+        }
+
+        .ls-counter {
+          position: absolute;
+          padding: 0 4px;
+          min-width: 6px;
+          height: 14px;
+          line-height: 15px;
+          text-align: center;
+          font-size: 9px;
+          @include border-radius(20px);
+
+          top: -1px;
+          @include i-right(-1px);
+        }
+      }
+
+      &.ls-more-actions {
+        &:before {
+          font-size: 8px;
+          @include box-shadow(none);
+        }
+      }
+
+      &.ls-icon-cal:before {
+        line-height: 37px;
+        letter-spacing: 1px;
+      }
+
+      &.ls-icon-env:before,
+      &.ls-icon-phone:before {
+        font-size: 17px;
+      }
+
+      &.ls-icon-credit-card:before {
+        font-size: 20px;
+      }
+
+      &.ls-icon-doc:before {
+        letter-spacing: 1px;
+        line-height: 37px;
+        font-size: 17px;
+      }
+    }
+
+    .ls-action, .ls-action-text {
+      pointer-events: none;
+    }
+  }
+
+  .ls-profile-action {
+    @include i-float(right);
+
+    .ls-my-account {
+      display: inline-block;
+      position: relative;
+    }
+  }
+
+  .ls-more-actions-C {
+    @include cf;
+    position: relative;
+  }
+
+  .ls-tooltip-menu {
+    position: absolute;
+    bottom: 115%;
+    @include i-padding(13px, 30px, 13px, 10px);
+    @include border-radius(4px);
+  }
+
+  .ls-tooltip-menu-item {
+    display: block;
+    line-height: 25px;
+    letter-spacing: 1px;
+    vertical-align: top;
+    margin-bottom: 1px;
+    @include font-size(11);
+    @include ellipsis;
+
+    @include i-text-align(left);
+
+    &:before {
+      width: 34px;
+      vertical-align: middle;
+      line-height: 25px;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    &.ls-icon-credit-card:before {
+      letter-spacing: 0;
+    }
+
+    &.ls-icon-doc:before,
+    &.ls-icon-env:before {
+      font-size: 15px;
+    }
+
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  }
+}

@@ -12,6 +12,8 @@
   const loadWebsiteBtn = document.getElementById('load-website');
   const configPresetSelect = document.getElementById('config-preset');
   const editConfigBtn = document.getElementById('edit-config');
+  const versionClassicRadio = document.getElementById('version-classic');
+  const versionModernRadio = document.getElementById('version-modern');
   const iframeContainer = document.getElementById('iframe-container');
   const iframePlaceholder = document.getElementById('iframe-placeholder');
   const targetIframe = document.getElementById('target-iframe');
@@ -62,6 +64,7 @@
       host: 'www.vcita.com',
       portalHost: 'clients.vcita.com',
       widgetsCdnHost: 'widgets.vcdnita.com',
+      version: 'classic', // Widget version: 'classic' or 'modern'
       activeEngage: true,
       engageButton: true,
       desktopEnabled: true,
@@ -90,8 +93,8 @@
         { name: 'contact', action: 'contact', text: 'Contact', icon: 'env' },
         { name: 'call', action: 'call', text: 'Call', icon: 'phone' }
       ],
-      desktopCss: '../dist/livesite.cdn.css',
-      mobileCss: '../dist/livesite.mobile.cdn.css',
+      desktopCss: '../dist-classic/livesite.min.css',
+      mobileCss: '../dist-classic/livesite.mobile.min.css',
     };
   }
 
@@ -124,6 +127,38 @@
       }
     });
 
+    // Version selection listeners
+    if (versionClassicRadio) {
+      versionClassicRadio.addEventListener('change', function() {
+        if (this.checked) {
+          currentConfig.version = 'classic';
+          updateCssUrlsForVersion('classic');
+          saveConfigToStorage();
+          updateStatus('Switched to Classic version', 'success');
+          addConsoleLog('Widget version changed to: Classic', 'info');
+          // Always reload widget if iframe is loaded (regardless of widgetInitialized flag)
+          if (targetIframe.src && targetIframe.src !== 'about:blank') {
+            reloadWidget();
+          }
+        }
+      });
+    }
+
+    if (versionModernRadio) {
+      versionModernRadio.addEventListener('change', function() {
+        if (this.checked) {
+          currentConfig.version = 'modern';
+          updateCssUrlsForVersion('modern');
+          saveConfigToStorage();
+          updateStatus('Switched to Modern version', 'success');
+          addConsoleLog('Widget version changed to: Modern', 'info');
+          // Always reload widget if iframe is loaded (regardless of widgetInitialized flag)
+          if (targetIframe.src && targetIframe.src !== 'about:blank') {
+            reloadWidget();
+          }
+        }
+      });
+    }
 
     editConfigBtn.addEventListener('click', showConfigModal);
     document.getElementById('close-config').addEventListener('click', hideConfigModal);
@@ -204,6 +239,12 @@
     // Enable logging if configured
     if (currentConfig.log) {
       widgetContainerUrl.searchParams.set('log', 'true');
+    }
+    
+    // Pass widget version (classic or modern)
+    if (currentConfig.version) {
+      widgetContainerUrl.searchParams.set('version', currentConfig.version);
+      addConsoleLog(`Widget version: ${currentConfig.version}`, 'info');
     }
     
     addConsoleLog(`Loading widget container: ${widgetContainerUrl.href}`, 'info');
@@ -457,13 +498,47 @@
   }
 
   function resetWidget() {
-    // Reload the widget container iframe
+    // Reload the widget container iframe with current config (including updated version)
     if (targetIframe.src && targetIframe.src !== 'about:blank') {
+      // Rebuild the URL with current config to ensure version parameter is updated
       const currentUrl = new URL(targetIframe.src);
+      const websiteUrl = currentUrl.searchParams.get('url') || websiteUrlInput.value.trim();
+      
+      // Update the URL with current config
+      const widgetContainerUrl = new URL('widget-container.html', window.location.href);
+      widgetContainerUrl.searchParams.set('url', websiteUrl);
+      
+      // Pass business ID/UID if available
+      if (currentConfig.uid) {
+        widgetContainerUrl.searchParams.set('id', currentConfig.uid);
+      } else if (currentConfig.id) {
+        widgetContainerUrl.searchParams.set('id', currentConfig.id);
+      } else {
+        widgetContainerUrl.searchParams.set('config', encodeURIComponent(JSON.stringify(currentConfig)));
+      }
+      
+      // Pass host configuration
+      if (currentConfig.host) {
+        widgetContainerUrl.searchParams.set('host', currentConfig.host);
+      }
+      if (currentConfig.portalHost) {
+        widgetContainerUrl.searchParams.set('portalHost', currentConfig.portalHost);
+      }
+      
+      // Enable logging if configured
+      if (currentConfig.log) {
+        widgetContainerUrl.searchParams.set('log', 'true');
+      }
+      
+      // Pass widget version (classic or modern) - THIS IS THE KEY FIX
+      if (currentConfig.version) {
+        widgetContainerUrl.searchParams.set('version', currentConfig.version);
+      }
+      
       targetIframe.src = 'about:blank';
       setTimeout(() => {
-        targetIframe.src = currentUrl.href;
-        updateStatus('Widget container reloaded', 'success');
+        targetIframe.src = widgetContainerUrl.href;
+        updateStatus('Widget container reloaded with current config', 'success');
       }, 100);
       return;
     }
@@ -682,8 +757,30 @@
       if (saved) {
         currentConfig = { ...getDefaultConfig(), ...JSON.parse(saved) };
       }
+      
+      // Set version radio buttons based on config
+      const version = currentConfig.version || 'classic';
+      if (versionClassicRadio) {
+        versionClassicRadio.checked = (version === 'classic');
+      }
+      if (versionModernRadio) {
+        versionModernRadio.checked = (version === 'modern');
+      }
+      
+      // Update CSS URLs based on version
+      updateCssUrlsForVersion(version);
     } catch (e) {
       console.warn('Could not load config from localStorage:', e);
+    }
+  }
+
+  function updateCssUrlsForVersion(version) {
+    if (version === 'modern') {
+      currentConfig.desktopCss = '../dist-modern/livesite.modern.min.css';
+      currentConfig.mobileCss = '../dist-modern/livesite.modern.mobile.min.css';
+    } else {
+      currentConfig.desktopCss = '../dist-classic/livesite.min.css';
+      currentConfig.mobileCss = '../dist-classic/livesite.mobile.min.css';
     }
   }
 })();

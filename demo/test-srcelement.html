@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Test srcElement in Chrome</title>
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+  <h1>Test srcElement in Chrome</h1>
+  <a href="#" id="test-link" class="livesite-schedule">Click Me (Schedule Link)</a>
+  <div id="output" style="margin-top: 20px; padding: 10px; background: #f0f0f0; font-family: monospace; white-space: pre-wrap;"></div>
+
+  <script>
+    function log(msg) {
+      var output = document.getElementById('output');
+      output.textContent += msg + '\n';
+      console.log(msg);
+    }
+
+    var link = document.getElementById('test-link');
+    
+    // Test 1: Native event listener
+    link.addEventListener('click', function(e) {
+      log('=== Native Event ===');
+      log('e.srcElement: ' + (e.srcElement ? e.srcElement.tagName + ' - ' + e.srcElement.className : 'undefined'));
+      log('e.target: ' + (e.target ? e.target.tagName + ' - ' + e.target.className : 'undefined'));
+      if (e.srcElement) {
+        log('e.srcElement.href: ' + (e.srcElement.href || 'undefined'));
+      }
+    }, true);
+
+    // Test 2: jQuery event (like production code)
+    $(link).on('click', function(e) {
+      log('\n=== jQuery Event ===');
+      log('e.originalEvent: ' + (e.originalEvent ? 'exists' : 'undefined'));
+      if (e.originalEvent) {
+        log('e.originalEvent.srcElement: ' + (e.originalEvent.srcElement ? e.originalEvent.srcElement.tagName + ' - ' + e.originalEvent.srcElement.className : 'undefined'));
+        log('e.originalEvent.target: ' + (e.originalEvent.target ? e.originalEvent.target.tagName + ' - ' + e.originalEvent.target.className : 'undefined'));
+        
+        // Try production code
+        try {
+          var href = e.originalEvent.srcElement.href;
+          log('✓ Production code: e.originalEvent.srcElement.href = ' + (href || 'undefined'));
+        } catch (error) {
+          log('✗ Production code FAILED: ' + error.message);
+        }
+      }
+      log('e.target: ' + (e.target ? e.target.tagName + ' - ' + e.target.className : 'undefined'));
+      log('this.href: ' + (this.href || 'undefined'));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Bindings Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .test-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #1747ac;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    .log {
+      background: #f8f9fa;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+  <h1>Debug Bindings - Event Properties Test</h1>
+  
+  <div class="test-section">
+    <h2>Test 1: Click on Link Text</h2>
+    <a href="#" class="livesite-schedule test-button" data-options="test:value">Schedule Now (click on text)</a>
+    <div class="log" id="log1"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test 2: Click on Link Background</h2>
+    <a href="#" class="livesite-schedule test-button" data-options="test:value" style="display: inline-block; padding: 20px;">Schedule Now (click on padding)</a>
+    <div class="log" id="log2"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test 3: Link with Full URL</h2>
+    <a href="https://live.vcita.com/site/test/action/123?mode=embed" class="livesite-schedule test-button" data-options="test:value">Schedule Now (with URL)</a>
+    <div class="log" id="log3"></div>
+  </div>
+
+  <script>
+    function log(id, message) {
+      var logEl = document.getElementById(id);
+      logEl.textContent += message + '\n';
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    // Test production-style bindAction
+    function bindAction(bindingsContainer, action) {
+      bindingsContainer.on('click.livesite', '.livesite-' + action, function (e) {
+        var logId = 'log' + (this.textContent.includes('text') ? '1' : (this.textContent.includes('padding') ? '2' : '3'));
+        
+        log(logId, '=== Click Event Debug ===');
+        log(logId, 'this (matched element): ' + this.tagName + ' - ' + this.className);
+        log(logId, 'this.href: ' + (this.href || 'undefined'));
+        log(logId, '$(this).attr("href"): ' + ($(this).attr('href') || 'undefined'));
+        
+        log(logId, '\n--- originalEvent properties ---');
+        log(logId, 'e.originalEvent: ' + (e.originalEvent ? 'exists' : 'undefined'));
+        if (e.originalEvent) {
+          log(logId, 'e.originalEvent.srcElement: ' + (e.originalEvent.srcElement ? (e.originalEvent.srcElement.tagName + ' - ' + e.originalEvent.srcElement.className) : 'undefined'));
+          log(logId, 'e.originalEvent.target: ' + (e.originalEvent.target ? (e.originalEvent.target.tagName + ' - ' + e.originalEvent.target.className) : 'undefined'));
+          
+          if (e.originalEvent.srcElement) {
+            log(logId, 'e.originalEvent.srcElement.href: ' + (e.originalEvent.srcElement.href || 'undefined'));
+          } else {
+            log(logId, 'ERROR: e.originalEvent.srcElement is undefined - accessing .href would throw!');
+          }
+          
+          if (e.originalEvent.target) {
+            log(logId, 'e.originalEvent.target.href: ' + (e.originalEvent.target.href || 'undefined'));
+          }
+        }
+        
+        log(logId, '\n--- jQuery normalized event ---');
+        log(logId, 'e.target: ' + (e.target ? (e.target.tagName + ' - ' + e.target.className) : 'undefined'));
+        if (e.target) {
+          log(logId, 'e.target.href: ' + (e.target.href || 'undefined'));
+        }
+        
+        // Try production code
+        try {
+          var href = e.originalEvent.srcElement.href;
+          log(logId, '\n✓ Production code worked: href = ' + (href || 'undefined'));
+        } catch (error) {
+          log(logId, '\n✗ Production code FAILED: ' + error.message);
+        }
+        
+        e.preventDefault();
+      });
+    }
+
+    $(function() {
+      var bindingsContainer = $('body');
+      bindAction(bindingsContainer, 'schedule');
+      log('log1', 'Bindings attached. Click the buttons above to test.');
+    });
+  </script>
+</body>
+</html>
