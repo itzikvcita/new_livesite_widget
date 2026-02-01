@@ -93,6 +93,13 @@
       identifyClient                : true,   // Recognize and welcome returning clients
       activeEngage                  : true,   // Whether to show the ActiveEngage
       engageButton                  : true,   // Whether to show the engage button
+
+      // AI Chat Experience Configuration
+      aiChatEnabled                 : true,   // Enable chat-first experience for modern widget (default: true)
+      aiWelcomeMessage              : '',     // AI agent's welcome message (loaded from server/CDN, fallback to default)
+      aiAgentName                   : '',     // Name of the AI agent (optional, for personalization)
+      aiQuickRepliesMax             : 4,      // Maximum number of quick reply chips to show (default: 4)
+      aiSyncActionButtons           : true,   // Sync action button clicks with chat messages for consistency
       desktopEnabled                : true,   // Whether to enable the widget on mobile
       desktopEngageAfter            : 5*1000, // Engage after in milliseconds, -1 to prevent from auto engaging
       mobileEnabled                 : true,   // Whether to enable the widget on desktop

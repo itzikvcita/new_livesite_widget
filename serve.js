@@ -55,6 +55,24 @@ const server = http.createServer((req, res) => {
   fs.readFile(filePath, (error, content) => {
     if (error) {
       if (error.code === 'ENOENT') {
+        // Try adding .html for extensionless paths (e.g. /demo/compare -> compare.html)
+        const hasExtension = path.extname(filePath) !== '';
+        const fallbackPath = hasExtension ? null : filePath + '.html';
+        if (fallbackPath && fs.existsSync(fallbackPath)) {
+          filePath = fallbackPath;
+          const extname2 = String(path.extname(filePath)).toLowerCase();
+          const contentType2 = mimeTypes[extname2] || 'application/octet-stream';
+          fs.readFile(filePath, (err2, data) => {
+            if (err2) {
+              res.writeHead(404);
+              res.end(`File not found: ${filePath}`);
+            } else {
+              res.writeHead(200, { 'Content-Type': contentType2 });
+              res.end(data, 'utf-8');
+            }
+          });
+          return;
+        }
         console.log(`404: File not found: ${filePath}`);
         res.writeHead(404);
         res.end(`File not found: ${filePath}`);

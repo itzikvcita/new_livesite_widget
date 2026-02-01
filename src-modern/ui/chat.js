@@ -38,7 +38,77 @@
         }
       }
 
+      // Initialize chat input handlers
+      this.initInputHandlers();
+
       liveSite.log('[Chat] Initialized chat interface');
+    },
+
+    /**
+     * Initialize chat input field handlers
+     */
+    initInputHandlers: function() {
+      var self = this;
+      var $input = $('#livesite_chat_input');
+      var $sendButton = $('#livesite_chat_send');
+
+      if ($input.length === 0 || $sendButton.length === 0) {
+        return;
+      }
+
+      // Send button click
+      $sendButton.on('click', function(e) {
+        e.preventDefault();
+        self.sendUserMessage();
+      });
+
+      // Enter key to send
+      $input.on('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          self.sendUserMessage();
+        }
+      });
+
+      // Focus input when chat opens
+      $input.on('focus', function() {
+        $(this).closest('.ls-chat-input-wrapper').addClass('ls-focused');
+      });
+
+      $input.on('blur', function() {
+        $(this).closest('.ls-chat-input-wrapper').removeClass('ls-focused');
+      });
+    },
+
+    /**
+     * Send user message from input field
+     */
+    sendUserMessage: function() {
+      var $input = $('#livesite_chat_input');
+      var message = $input.val().trim();
+
+      if (!message) {
+        return;
+      }
+
+      // Add user message to chat
+      this.addUserMessage(message);
+
+      // Clear input
+      $input.val('');
+
+      // For now, just acknowledge the message (no real AI yet)
+      var self = this;
+      setTimeout(function() {
+        var responses = [
+          'Thanks for your message! I can help you with scheduling, payments, or any questions you have.',
+          'Got it! Let me know how I can assist you today.',
+          'I understand. What would you like to do next?',
+          'Thanks! I\'m here to help with any of your needs.'
+        ];
+        var randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        self.addBotMessage(randomResponse, config.imageUrl, true);
+      }, 800);
     },
 
     /**
@@ -130,14 +200,17 @@
 
     /**
      * Show welcome message with quick replies
-     * @param {string} welcomeText - Welcome message text
-     * @param {Array} quickReplies - Array of quick reply chips
+     * @param {string} welcomeText - Welcome message text (optional, will use config.aiWelcomeMessage if not provided)
+     * @param {Array} quickReplies - Array of quick reply chips (optional)
      */
     showWelcomeMessage: function(welcomeText, quickReplies) {
       var self = this;
       
-      // Add welcome message
-      this.addBotMessage(welcomeText || config.activeEngageText || 'Hello! How can I help you?', config.imageUrl, false);
+      // Use provided welcomeText, or config.aiWelcomeMessage, or AI-style default
+      var aiWelcomeMessage = welcomeText || config.aiWelcomeMessage || 'Hi! I\'m here to help you. What would you like to do today?';
+      
+      // Add welcome message from AI agent
+      this.addBotMessage(aiWelcomeMessage, config.imageUrl, false);
       
       // Show quick replies after a short delay
       setTimeout(function() {
@@ -151,8 +224,9 @@
             }
           );
         } else {
-          // Use default actions as quick replies
-          var chips = liveSite.ui.createQuickReplyChips(config.actions, 4);
+          // Use default actions as quick replies, limited by aiQuickRepliesMax
+          var maxChips = config.aiQuickRepliesMax || 4;
+          var chips = liveSite.ui.createQuickReplyChips(config.actions, maxChips);
           if (chips.length > 0) {
             liveSite.ui.renderQuickReplyChips(
               chatState.containerSelector,
@@ -196,6 +270,8 @@
      * @param {string} optionsString - Action options string (optional, format: "key1:value1;key2:value2")
      */
     handleQuickReply: function(action, url, optionsString) {
+      var self = this;
+      
       // Find action text for user message
       var actionObj = liveSite.ui.getAction(action);
       var actionText = actionObj ? actionObj.text : action;
@@ -206,27 +282,40 @@
       // Remove quick replies
       liveSite.ui.removeQuickReplyChips(chatState.containerSelector);
       
+      // Show AI acknowledgment message for conversational flow
+      var acknowledgmentMessages = [
+        'Great choice! Let me help you with that...',
+        'Perfect! Opening that for you now...',
+        'Sure thing! Let\'s get that started...',
+        'Excellent! I\'ll take care of that...'
+      ];
+      var randomAck = acknowledgmentMessages[Math.floor(Math.random() * acknowledgmentMessages.length)];
+      this.addBotMessage(randomAck, config.imageUrl, true);
+      
       // Parse options string if provided
       var options = this.parseOptions(optionsString || '');
       
-      // If URL is provided and it's a valid embed URL with mode=embed, use it directly
-      if (url && url !== '#' && url.indexOf('http') === 0 && url.indexOf('mode=embed') !== -1) {
-        liveSite.opener(url);
-        return;
-      }
-      
-      // Otherwise, trigger the action using liveSite.action() or liveSite[action]()
-      if (action && liveSite.action) {
-        liveSite.action(action, options);
-      } else if (action && liveSite[action] && typeof liveSite[action] === 'function') {
-        liveSite[action](options);
-      } else {
-        liveSite.log('[Chat] Unknown action: ' + action);
-        // Fallback: navigate to URL if available
-        if (url && url !== '#') {
-          window.open(url, '_blank');
+      // Trigger action after a brief delay to let acknowledgment message appear
+      setTimeout(function() {
+        // If URL is provided and it's a valid embed URL with mode=embed, use it directly
+        if (url && url !== '#' && url.indexOf('http') === 0 && url.indexOf('mode=embed') !== -1) {
+          liveSite.opener(url);
+          return;
         }
-      }
+        
+        // Otherwise, trigger the action using liveSite.action() or liveSite[action]()
+        if (action && liveSite.action) {
+          liveSite.action(action, options);
+        } else if (action && liveSite[action] && typeof liveSite[action] === 'function') {
+          liveSite[action](options);
+        } else {
+          liveSite.log('[Chat] Unknown action: ' + action);
+          // Fallback: navigate to URL if available
+          if (url && url !== '#') {
+            window.open(url, '_blank');
+          }
+        }
+      }, 800); // Small delay to show acknowledgment before opening dialog
     },
 
     /**

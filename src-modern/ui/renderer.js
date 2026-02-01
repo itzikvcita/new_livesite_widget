@@ -12,35 +12,49 @@
       ACTIVE_ENGAGE_TEMPLATE = '<div id="livesite_active_engage" class="ls-font-family-T ls-font-size-T ls-zoom ls-overlay-T" dir="{{data.rtl ? "rtl" : "ltr"}}">' +
                                  '<div class="ls-ae-C ls-zoom-width">' +
                                    '<div class="ls-ae">' +
-                                     '<div class="ls-content ls-ae-bg-T">' +
+                                     '<div class="ls-content ls-ae-bg-T<% if (data.aiChatEnabled) { %> ls-chat-enabled<% } %>">' +
                                        '<a href="#" class="ls-close livesite-engage-close ls-ae-text-T"></a>' +
                                        '<div class="ls-ae-top">{{topPromoLink}}</div>' +
-                                       '<div class="ls-clearfix">' +
-                                         '<% if (!_.isEmpty(data.imageUrl)) { %>' +
-                                           '<% if (_.isEmpty(data.profileUrl)) { %>' +
-                                             '<div class="ls-photo"><img src="<%- data.imageUrl %>"/></div>' +
-                                           '<% } else { %>' +
-                                             '<a class="ls-photo" target="_blank" href="<%- data.profileUrl %>"><img src="<%- data.imageUrl %>"/></a>' +
+                                       '<% if (data.aiChatEnabled) { %>' +
+                                         '<% // Chat-first interface: show chat container, hide static title/text %>' +
+                                         '<div id="livesite_chat_messages" class="ls-chat-messages"></div>' +
+                                         '<div class="ls-chat-input-container">' +
+                                           '<div class="ls-chat-input-wrapper">' +
+                                             '<input type="text" id="livesite_chat_input" class="ls-chat-input" placeholder="Type your message..." autocomplete="off" />' +
+                                             '<button type="button" id="livesite_chat_send" class="ls-chat-send-button" title="Send">' +
+                                               '<span class="ls-chat-send-icon">→</span>' +
+                                             '</button>' +
+                                           '</div>' +
+                                         '</div>' +
+                                       '<% } else { %>' +
+                                         '<% // Classic interface: show static title and text %>' +
+                                         '<div class="ls-clearfix">' +
+                                           '<% if (!_.isEmpty(data.imageUrl)) { %>' +
+                                             '<% if (_.isEmpty(data.profileUrl)) { %>' +
+                                               '<div class="ls-photo"><img src="<%- data.imageUrl %>"/></div>' +
+                                             '<% } else { %>' +
+                                               '<a class="ls-photo" target="_blank" href="<%- data.profileUrl %>"><img src="<%- data.imageUrl %>"/></a>' +
+                                             '<% } %>' +
                                            '<% } %>' +
-                                         '<% } %>' +
-                                         '<div class="ls-title ls-ae-text-T"><%- data.activeEngageTitle %></div>' +
-                                       '</div>' +
-                                       '<div class="ls-text ls-ae-text-T">{{data.activeEngageText}}</div>' +
-                                       '<div class="ls-main-action-C">' +
-                                         '<% if (data.activeEngageAction != "none") { %>' +
-                                           '<% if (showCollapsedActions) { %>' +
-                                             '<div class="ls-more-actions-C">' +
-                                               '<a class="ls-more-actions ls-icon-menu ls-ae-text-T" href="#"></a>' +
-                                               '<div class="ls-tooltip-menu ls-tooltip-menu-bg-T"> ' +
-                                                 '<% _.forEach(data.actions, function(item) { %>' +
-                                                   '<a class="ls-tooltip-menu-item ls-tooltip-menu-text-T livesite-{{item.action}} ls-icon-{{item.icon}} ls-action-{{item.name}} {{ item.lightbox ? \'livesite-lightbox\' : \'\' }}" href="<%- item.url || \'#\' %>" title="<%- item.text %>" target="<%- item.target %>" data-origin="livesite_active_engage" data-options="<%- item.options %>"><%- item.text %></a>' +
-                                                 '<% }); %>' +
+                                           '<div class="ls-title ls-ae-text-T"><%- data.activeEngageTitle %></div>' +
+                                         '</div>' +
+                                         '<div class="ls-text ls-ae-text-T">{{data.activeEngageText}}</div>' +
+                                         '<div class="ls-main-action-C">' +
+                                           '<% if (data.activeEngageAction != "none") { %>' +
+                                             '<% if (showCollapsedActions) { %>' +
+                                               '<div class="ls-more-actions-C">' +
+                                                 '<a class="ls-more-actions ls-icon-menu ls-ae-text-T" href="#"></a>' +
+                                                 '<div class="ls-tooltip-menu ls-tooltip-menu-bg-T"> ' +
+                                                   '<% _.forEach(data.actions, function(item) { %>' +
+                                                     '<a class="ls-tooltip-menu-item ls-tooltip-menu-text-T livesite-{{item.action}} ls-icon-{{item.icon}} ls-action-{{item.name}} {{ item.lightbox ? \'livesite-lightbox\' : \'\' }}" href="<%- item.url || \'#\' %>" title="<%- item.text %>" target="<%- item.target %>" data-origin="livesite_active_engage" data-options="<%- item.options %>"><%- item.text %></a>' +
+                                                   '<% }); %>' +
+                                                 '</div>' +
                                                '</div>' +
-                                             '</div>' +
+                                             '<% } %>' +
+                                             '<a class="livesite-{{data.activeEngageAction}} ls-main-action ls-main-action-T {{ data.activeEngageActionLightbox ? \'livesite-lightbox\' : \'\' }}" href="<%- data.activeEngageActionUrl || \'#\' %>" target="<%- data.activeEngageActionTarget %>" data-origin="livesite_main_action" data-options="<%- data.activeEngageActionOptions %>"><%- data.activeEngageActionText %></a>' +
                                            '<% } %>' +
-                                           '<a class="livesite-{{data.activeEngageAction}} ls-main-action ls-main-action-T {{ data.activeEngageActionLightbox ? \'livesite-lightbox\' : \'\' }}" href="<%- data.activeEngageActionUrl || \'#\' %>" target="<%- data.activeEngageActionTarget %>" data-origin="livesite_main_action" data-options="<%- data.activeEngageActionOptions %>"><%- data.activeEngageActionText %></a>' +
-                                         '<% } %>' +
-                                       '</div>' +
+                                         '</div>' +
+                                       '<% } %>' +
                                        '{{bottomPromoLink}}' +
                                      '</div>' +
                                      '<% if (showInlineActions) { %>' +
@@ -165,6 +179,15 @@
                                     '</div>' +
                                   '</div>' +
                                 '</div>',
+
+      CHAT_INPUT_TEMPLATE = '<div class="ls-chat-input-container">' +
+                            '<div class="ls-chat-input-wrapper">' +
+                              '<input type="text" id="livesite_chat_input" class="ls-chat-input" placeholder="Type your message..." autocomplete="off" />' +
+                              '<button type="button" id="livesite_chat_send" class="ls-chat-send-button" title="Send">' +
+                                '<span class="ls-chat-send-icon">→</span>' +
+                              '</button>' +
+                            '</div>' +
+                          '</div>',
 
       QUICK_REPLY_CHIPS_TEMPLATE = '<div class="ls-quick-replies">' +
                                     '<% _.forEach(chips, function(chip) { %>' +
@@ -402,6 +425,60 @@
       } else {
         return '';
       }
+    },
+
+    /**
+     * Render a bot chat message
+     * @param {string} message - Message text
+     * @param {string} time - Time string
+     * @param {string} avatarUrl - Optional avatar URL
+     * @returns {string} HTML string
+     */
+    renderChatMessageBot: function(message, time, avatarUrl) {
+      return _.template(CHAT_MESSAGE_BOT_TEMPLATE, {
+        message: message,
+        time: time,
+        data: {
+          avatarUrl: avatarUrl || config.imageUrl || ''
+        }
+      });
+    },
+
+    /**
+     * Render a user chat message
+     * @param {string} message - Message text
+     * @param {string} time - Time string
+     * @returns {string} HTML string
+     */
+    renderChatMessageUser: function(message, time) {
+      return _.template(CHAT_MESSAGE_USER_TEMPLATE, {
+        message: message,
+        time: time
+      });
+    },
+
+    /**
+     * Render quick reply chips HTML from template
+     * @param {Array} chips - Array of chip objects
+     * @returns {string} HTML string
+     */
+    renderQuickReplyChipsHtml: function(chips) {
+      return _.template(QUICK_REPLY_CHIPS_TEMPLATE, {
+        chips: chips || []
+      });
+    },
+
+    /**
+     * Render typing indicator HTML from template
+     * @param {string} avatarUrl - Optional avatar URL
+     * @returns {string} HTML string
+     */
+    renderTypingIndicator: function(avatarUrl) {
+      return _.template(TYPING_INDICATOR_TEMPLATE, {
+        data: {
+          avatarUrl: avatarUrl || config.imageUrl || ''
+        }
+      });
     },
 
     renderClient : function(name, unread) {

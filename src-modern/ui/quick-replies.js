@@ -64,8 +64,16 @@
         return;
       }
 
-      // Render chips HTML
-      var chipsHtml = liveSite.ui.renderQuickReplyChips(chips);
+      // Render chips HTML using template
+      var chipsHtml = liveSite.ui.renderQuickReplyChipsHtml ? liveSite.ui.renderQuickReplyChipsHtml(chips) : '';
+      if (!chipsHtml) {
+        // Fallback: create HTML manually if template renderer not available
+        chipsHtml = '<div class="ls-quick-replies">';
+        _.forEach(chips, function(chip) {
+          chipsHtml += '<button class="ls-quick-reply-chip" data-action="' + (chip.action || '') + '" data-url="' + (chip.url || '#') + '" data-options="' + (chip.options || '') + '">' + (chip.text || '') + '</button>';
+        });
+        chipsHtml += '</div>';
+      }
       var $chipsContainer = $(chipsHtml);
       
       container.append($chipsContainer);

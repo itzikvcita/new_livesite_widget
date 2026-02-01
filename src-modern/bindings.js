@@ -97,6 +97,16 @@
               }
           })
       }
+      // Optionally sync action button clicks with chat for consistency
+      if (config.aiChatEnabled && config.aiSyncActionButtons && liveSite.chat) {
+        // Find action text for user message
+        var actionObj = liveSite.ui && liveSite.ui.getAction ? liveSite.ui.getAction(action) : null;
+        var actionText = actionObj ? actionObj.text : ($(this).text().trim() || action);
+        
+        // Add user message to chat to show action was taken
+        liveSite.chat.addUserMessage(actionText);
+      }
+      
       liveSite[action](options);
       e.preventDefault();
     });

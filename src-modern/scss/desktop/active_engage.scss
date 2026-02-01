@@ -42,9 +42,9 @@
   right: 0px;
   margin: 10px $active_engage_right 0 10px;
   width: $active_engage_width;
-  @include box-sizing(content-box !important);
+  @include box-sizing(border-box !important);
   @include border-top-radius(16px); // Modern: more rounded corners (16px instead of 6px)
-  // overflow: hidden;
+  overflow: hidden; // Prevent overflow
   background: #ffffff; // Modern: ensure white background
   @include box-shadow(0px 8px 24px 0px rgba(0, 0, 0, 0.12)); // Modern: softer, elevated shadow
   border: 1px solid rgba(0, 0, 0, 0.05); // Modern: subtle border for depth
@@ -57,6 +57,63 @@
 
   .ls-content {
     padding: 28px; // Modern: slightly more padding
+    box-sizing: border-box;
+    
+    // Chat-enabled layout: flex column for chat messages
+    &.ls-chat-enabled {
+      display: flex;
+      flex-direction: column;
+      padding: 0; // Remove padding, chat messages container handles its own padding
+      min-height: 400px;
+      max-height: 650px;
+      overflow: hidden; // Prevent content overflow
+      position: relative; // For absolute positioning of children
+      width: 100%;
+      box-sizing: border-box;
+      
+      // Ensure close button is positioned correctly
+      .ls-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+      }
+      
+      // Top promo link positioning for chat
+      .ls-ae-top {
+        position: relative !important;
+        padding: 10px 20px 0 !important;
+        z-index: 5;
+        flex-shrink: 0; // Don't shrink
+        margin: 0 !important;
+        margin-bottom: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        left: 0 !important;
+        right: 0 !important;
+      }
+      
+      // Chat messages should fill remaining space
+      #livesite_chat_messages {
+        flex: 1;
+        min-height: 0; // Allow flex shrinking
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      
+      // Chat input container at bottom
+      .ls-chat-input-container {
+        flex-shrink: 0;
+        border-top: 1px solid #e5e7eb;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden;
+        margin: 0;
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
 
     .ls-text a:hover {
       text-decoration: underline;

@@ -25,10 +25,15 @@
     
     .comparison-container {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
       gap: 20px;
       max-width: 1800px;
       margin: 0 auto;
+    }
+    @media (max-width: 720px) {
+      .comparison-container {
+        grid-template-columns: 1fr;
+      }
     }
     
     .widget-panel {
@@ -57,11 +62,13 @@
     
     .widget-frame {
       width: 100%;
+      min-height: 500px;
       height: 600px;
       border: 2px solid #ddd;
       border-radius: 4px;
-      background: white;
+      background: #fff;
       position: relative;
+      display: block;
     }
     
     .status {
@@ -134,15 +141,21 @@
   
   <script>
     const businessId = 'WI-2HUTRFBQZWZWH7EF835C';
-    const currentUrl = new URL(window.location.href);
-    const baseUrl = currentUrl.origin;
-    
+    const WIDGET_TIMEOUT_MS = 20000;
+
+    function setStatus(el, text, className) {
+      if (el) {
+        el.textContent = text;
+        el.className = 'status ' + (className || 'loading');
+      }
+    }
+
     // Classic Widget Setup
     function loadClassicWidget() {
       const iframe = document.getElementById('classic-iframe');
       const status = document.getElementById('classic-status');
-      
-      // Use widget-container.html approach for proper widget loading
+      if (!iframe || !status) return;
+
       const widgetContainerUrl = new URL('widget-container.html', window.location.href);
       widgetContainerUrl.searchParams.set('url', 'https://example.com');
       widgetContainerUrl.searchParams.set('id', businessId);
@@ -150,31 +163,40 @@
       widgetContainerUrl.searchParams.set('host', 'www.vcita.com');
       widgetContainerUrl.searchParams.set('portalHost', 'clients.vcita.com');
       widgetContainerUrl.searchParams.set('log', 'true');
-      
-      iframe.src = widgetContainerUrl.href;
-      
-      // Listen for messages from iframe
+
       const messageHandler = function(event) {
+        if (event.source !== iframe.contentWindow) return;
         if (event.data && event.data.type === 'livesite-widget-initialized') {
+          window.removeEventListener('message', messageHandler);
           if (event.data.success) {
-            status.textContent = 'Classic widget loaded successfully';
-            status.className = 'status success';
+            setStatus(status, 'Classic widget loaded successfully', 'success');
           } else {
-            status.textContent = 'Classic widget failed: ' + (event.data.error || 'Unknown error');
-            status.className = 'status error';
+            setStatus(status, 'Classic widget failed: ' + (event.data.error || 'Unknown error'), 'error');
           }
         }
       };
       window.addEventListener('message', messageHandler);
-      iframe._messageHandler = messageHandler;
+
+      iframe.onerror = function() {
+        setStatus(status, 'Classic widget iframe failed to load', 'error');
+      };
+      iframe.onload = function() {
+        setTimeout(function() {
+          if (status.className.indexOf('success') === -1 && status.className.indexOf('error') === -1) {
+            setStatus(status, 'Classic widget loaded (check iframe for errors)', 'success');
+          }
+        }, WIDGET_TIMEOUT_MS);
+      };
+
+      iframe.src = widgetContainerUrl.href;
     }
-    
+
     // Modern Widget Setup
     function loadModernWidget() {
       const iframe = document.getElementById('modern-iframe');
       const status = document.getElementById('modern-status');
-      
-      // Use widget-container.html approach for proper widget loading
+      if (!iframe || !status) return;
+
       const widgetContainerUrl = new URL('widget-container.html', window.location.href);
       widgetContainerUrl.searchParams.set('url', 'https://example.com');
       widgetContainerUrl.searchParams.set('id', businessId);
@@ -182,29 +204,45 @@
       widgetContainerUrl.searchParams.set('host', 'www.vcita.com');
       widgetContainerUrl.searchParams.set('portalHost', 'clients.vcita.com');
       widgetContainerUrl.searchParams.set('log', 'true');
-      
-      iframe.src = widgetContainerUrl.href;
-      
-      // Listen for messages from iframe
+
       const messageHandler = function(event) {
+        if (event.source !== iframe.contentWindow) return;
         if (event.data && event.data.type === 'livesite-widget-initialized') {
+          window.removeEventListener('message', messageHandler);
           if (event.data.success) {
-            status.textContent = 'Modern widget loaded successfully';
-            status.className = 'status success';
+            setStatus(status, 'Modern widget loaded successfully', 'success');
           } else {
-            status.textContent = 'Modern widget failed: ' + (event.data.error || 'Unknown error');
-            status.className = 'status error';
+            setStatus(status, 'Modern widget failed: ' + (event.data.error || 'Unknown error'), 'error');
           }
         }
       };
       window.addEventListener('message', messageHandler);
-      iframe._messageHandler = messageHandler;
+
+      iframe.onerror = function() {
+        setStatus(status, 'Modern widget iframe failed to load', 'error');
+      };
+      iframe.onload = function() {
+        setTimeout(function() {
+          if (status.className.indexOf('success') === -1 && status.className.indexOf('error') === -1) {
+            setStatus(status, 'Modern widget loaded (check iframe for errors)', 'success');
+          }
+        }, WIDGET_TIMEOUT_MS);
+      };
+
+      iframe.src = widgetContainerUrl.href;
     }
-    
-    // Load both widgets
+
     window.addEventListener('load', function() {
-      loadClassicWidget();
-      loadModernWidget();
+      try {
+        loadClassicWidget();
+        loadModernWidget();
+      } catch (e) {
+        console.error('Compare page error:', e);
+        var s1 = document.getElementById('classic-status');
+        var s2 = document.getElementById('modern-status');
+        if (s1) setStatus(s1, 'Error: ' + e.message, 'error');
+        if (s2) setStatus(s2, 'Error: ' + e.message, 'error');
+      }
     });
   </script>
 </body>

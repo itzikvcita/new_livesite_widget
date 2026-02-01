@@ -118,6 +118,19 @@
       setTimeout(function() {
         triggerResize('#livesite_active_engage');
       }, 400);
+
+      // Initialize AI chat if enabled
+      if (config.aiChatEnabled && liveSite.chat) {
+        // Wait a bit for DOM to be ready, then initialize chat
+        setTimeout(function() {
+          var chatContainer = $('#livesite_chat_messages');
+          if (chatContainer.length > 0) {
+            liveSite.chat.init('#livesite_chat_messages');
+            // Show AI welcome message
+            liveSite.chat.showWelcomeMessage(config.aiWelcomeMessage);
+          }
+        }, animate ? 300 : 0); // Small delay if animated to let animation start
+      }
     },
 
     // animate defaults to true
